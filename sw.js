@@ -1,4 +1,4 @@
-const CACHE = "kalkulator-fizik-v1";
+const CACHE = "kalkulator-fizik-v3";
 const FILES = [
   "./",
   "./index.html",
