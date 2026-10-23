@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#007BFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Fizik">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>Kalkulator Fizik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+        h2 { text-align: center; color: #2c3e50; margin: 0 0 20px; }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+        .lang-switch {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .lang-switch label { margin: 0; font-size: 13px; }
+        select {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        #panelSelect {
+            width: 100%;
+            padding: 11px 10px;
+            font-weight: bold;
+            color: #004a99;
+            background: #e3f0ff;
+            border: 2px solid #007BFF;
+            margin-bottom: 16px;
+        }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .radio-group {
+            display: flex;
+            justify-content: space-around;
+            background: #eef2f5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .radio-group label { color: #333; cursor: pointer; margin: 0; }
+        .input-group { margin-bottom: 12px; }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        button.calc {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button.calc:hover { background-color: #0056b3; }
+        .result {
+            margin-top: 20px;
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #007BFF;
+        }
+        .result p { margin: 6px 0; font-size: 15px; color: #222; }
+        .result.error { border-left-color: #d9534f; }
+        .highlight { font-weight: bold; color: #d9534f; }
+        .hint { font-size: 14px; color: #444; margin: 0 0 6px; font-weight: bold; }
+        .note { font-size: 13px; color: #666; margin: 0 0 14px; }
+        /* ---- Pro look + simulator ---- */
+        body { background: linear-gradient(160deg, #e3eeff 0%, #f4f7f6 55%); }
+        .card { border-radius: 18px; box-shadow: 0 10px 30px rgba(20, 60, 120, 0.14); }
+        h2 { background: linear-gradient(90deg, #0062d6, #00b4d8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .sim-canvas, .graph-canvas { width: 100%; display: block; border-radius: 12px; }
+        .sim-canvas { height: 190px; background: linear-gradient(#f9fcff, #e4eefc); cursor: grab; margin-bottom: 8px; touch-action: none; }
+        .graph-canvas { height: 120px; background: #0f1b2d; margin-bottom: 10px; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+        .stat { background: #eef4ff; border-radius: 10px; padding: 8px 4px; text-align: center; }
+        .stat small { display: block; font-size: 11px; color: #667; margin-bottom: 2px; }
+        .stat b { font-size: 14px; color: #0a3d91; }
+        .slider-row { margin-bottom: 10px; }
+        .slider-row input { width: 100%; accent-color: #007BFF; }
+        .btn-row { display: flex; gap: 8px; margin-top: 6px; }
+        button.mini { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #007BFF; color: #fff; font-weight: bold; font-size: 14px; cursor: pointer; }
+        button.mini.alt { background: #e3ebf5; color: #223; }
+        .card { min-width: 0; }
+        /* ---- Tab bar ---- */
+        .tabbar { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; overflow-x: auto; background: #fff;
+                  margin: 0 -8px 14px; padding: 6px 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .tabbar::-webkit-scrollbar { display: none; }
+        .tab { flex: 0 0 auto; border: none; background: #eef2f5; color: #445; font-weight: bold; font-size: 14px;
+               padding: 10px 15px; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+        .tab:hover { background: #dde6ec; }
+        .tab.active { background: linear-gradient(90deg, #0062d6, #00a0e0); color: #fff; box-shadow: 0 3px 8px rgba(0, 98, 214, 0.3); }
+        .tabbar { overflow: visible; }
+        .tabbar .tab { flex: 1; border-radius: 12px; padding: 12px 8px; font-size: 15px; text-align: center; }
+        .section { margin-top: 26px; padding-top: 20px; border-top: 2px solid #e3e9f0; }
+        .section:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+        .sec-title { margin: 0 0 8px; font-size: 17px; color: #0a3d91; }
+    
+        /* ---- Desktop view (wide screens) ---- */
+        @media (min-width: 900px) {
+            body { padding: 32px; }
+            .card { max-width: 1000px; padding: 30px 34px; }
+            h2 { font-size: 32px; }
+            .tabbar { max-width: 460px; margin: 0 auto 22px; }
+            .card .panel .section {
+                margin: 0; padding: 20px; border: 1px solid #e3e9f0;
+                border-radius: 14px; background: #fafcff;
+            }
+            /* simulator keeps its phone-size width; calculators fill the rest */
+            #panel-phys.active, #panel-heat.active {
+                display: grid; grid-template-columns: 420px 1fr;
+                gap: 22px; align-items: start;
+            }
+            #panel-sim { grid-row: 1 / span 2; }
+            #panel-heat.active { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="lang-switch">
+            <label for="langSelect" data-t="lang"></label>
+            <select id="langSelect" onchange="setLang(this.value)">
+                <option value="ms">Bahasa Melayu</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+
+        <h2 data-t="title"></h2>
+
+        <div class="tabbar" id="tabbar" role="tablist">
+            <button class="tab active" data-panel="phys" data-t="tabPhys"></button>
+            <button class="tab" data-panel="heat" data-t="tabHeat"></button>
+        </div>
+
+                <div class="panel active" id="panel-phys">
+        <!-- 0. Simulator bandul langsung -->
+        <div class="section" id="panel-sim">
+            <h3 class="sec-title" data-t="optSim"></h3>
+            <p class="hint">θ'' = −(g/L) sin θ</p>
+            <p class="note" data-t="simTip"></p>
+            <canvas id="simCanvas" class="sim-canvas"></canvas>
+            <canvas id="graphCanvas" class="graph-canvas"></canvas>
+            <div class="stats">
+                <div class="stat"><small data-t="stAngle"></small><b id="stA">-</b></div>
+                <div class="stat"><small data-t="stTime"></small><b id="stTm">-</b></div>
+                <div class="stat"><small data-t="stMeas"></small><b id="stM">-</b></div>
+                <div class="stat"><small data-t="stT"></small><b id="stT">-</b></div>
+                <div class="stat"><small data-t="stT0"></small><b id="stT0">-</b></div>
+                <div class="stat"><small data-t="stDiff"></small><b id="stD">-</b></div>
+            </div>
+            <div class="slider-row">
+                <label><span data-t="simL"></span> <b id="simLval">1.00</b></label>
+                <input type="range" id="simLen" min="0.2" max="1.2" step="0.05" value="1">
+            </div>
+            <div class="slider-row">
+                <label><span data-t="simA"></span> <b id="simAval">40</b>°</label>
+                <input type="range" id="simAng" min="1" max="90" step="1" value="40">
+            </div>
+            <div class="btn-row">
+                <button class="mini" id="simPlay" onclick="simToggle()"></button>
+                <button class="mini alt" onclick="simRestart()" data-t="simReset"></button>
+            </div>
+            <button class="calc" onclick="simSend()" data-t="simSend"></button>
+        </div>
+
+        <!-- 1. Bandul ringkas: g -->
+        <div class="section" id="panel-pend">
+            <h3 class="sec-title" data-t="optPend"></h3>
+            <p class="hint">T = t / N &nbsp;&nbsp; g = 4π²L / T²</p>
+            <p class="note" data-t="pNote"></p>
+            <div class="input-group">
+                <label for="pL" data-t="pL"></label>
+                <input type="number" id="pL" step="any">
+            </div>
+            <div class="input-group">
+                <label for="pN" data-t="pN"></label>
+                <input type="number" id="pN" step="any">
+            </div>
+            <div class="input-group">
+                <label for="pTime" data-t="pTime"></label>
+                <input type="number" id="pTime" step="any">
+            </div>
+            <button class="calc" onclick="kiraPend()" data-t="calc"></button>
+            <div class="result" id="out-pend" hidden></div>
+        </div>
+
+        <!-- 3. Panjang lengkok & sesaran -->
+        <div class="section" id="panel-arc">
+            <h3 class="sec-title" data-t="optArc"></h3>
+            <p class="hint">s = 2Lθ₀ &nbsp;&nbsp; d = 2L sin θ₀</p>
+            <p class="note" data-t="aNote"></p>
+            <div class="input-group">
+                <label for="aL" data-t="aL"></label>
+                <input type="number" id="aL" step="any">
+            </div>
+            <div class="input-group">
+                <label for="aTheta" data-t="aTheta"></label>
+                <input type="number" id="aTheta" step="any">
+            </div>
+            <div class="input-group">
+                <label for="aG" data-t="aG"></label>
+                <input type="number" id="aG" value="9.81" step="any">
+            </div>
+            <button class="calc" onclick="kiraArc()" data-t="calc"></button>
+            <div class="result" id="out-arc" hidden></div>
+        </div>
+
+        </div>
+
+        <div class="panel" id="panel-heat">
+        <!-- 2. Haba Q = mcΔθ + kadar -->
+        <div class="section" id="panel-q">
+            <h3 class="sec-title" data-t="optQ"></h3>
+            <p class="hint">Q = m × c × Δθ</p>
+            <p class="note" data-t="qNote"></p>
+            <label data-t="state"></label>
+            <div class="radio-group">
+                <label><input type="radio" name="stateMode" value="Static" checked> Static</label>
+                <label><input type="radio" name="stateMode" value="Oscillation"> Oscillation</label>
+            </div>
+            <div class="input-group">
+                <label for="mass" data-t="qMass"></label>
+                <input type="number" id="mass" value="65.06" step="any">
+            </div>
+            <div class="input-group">
+                <label for="shc" data-t="qShc"></label>
+                <input type="number" id="shc" value="380" step="any">
+            </div>
+            <div class="input-group">
+                <label for="tempInitial" data-th="ti"></label>
+                <input type="number" id="tempInitial" data-ph="phTi" step="any">
+            </div>
+            <div class="input-group">
+                <label for="tempFinal" data-th="tf"></label>
+                <input type="number" id="tempFinal" data-ph="phTf" step="any">
+            </div>
+            <div class="input-group">
+                <label for="qTime" data-t="qTime"></label>
+                <input type="number" id="qTime" step="any">
+            </div>
+            <button class="calc" onclick="kiraQ()" data-t="calc"></button>
+            <div class="result" id="out-q" hidden></div>
+        </div>
+
+        <!-- 4. Muatan haba tentu -->
+        <div class="section" id="panel-shc">
+            <h3 class="sec-title" data-t="optShc"></h3>
+            <p class="hint">c = Q / (m × Δθ)</p>
+            <div class="input-group">
+                <label for="shcQ" data-t="cQ"></label>
+                <input type="number" id="shcQ" step="any">
+            </div>
+            <div class="input-group">
+                <label for="shcMass" data-t="cMass"></label>
+                <input type="number" id="shcMass" step="any">
+            </div>
+            <div class="input-group">
+                <label for="shcDT" data-t="cDT"></label>
+                <input type="number" id="shcDT" step="any">
+            </div>
+            <button class="calc" onclick="kiraSHC()" data-t="calc"></button>
+            <div class="result" id="out-shc" hidden></div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        const TEXT = {
+            ms: {
+                pageTitle: "Kalkulator Fizik", lang: "Bahasa:", title: "Kalkulator Fizik",
+                calcType: "Pilih pengiraan:",
+                optPend: "Bandul: pecutan graviti (g)",
+                optQ: "Haba (Q = mcΔθ) & kadar penyejukan",
+                optArc: "Bandul: panjang lengkok & sesaran",
+                optShc: "Muatan haba tentu (c)",
+                calc: "Kira Sekarang",
+                optSim: "Simulator bandul langsung (interaktif)",
+                tabPhys: "Fizik (SHM)", tabHeat: "Haba",
+                simTip: "Seret bob untuk menukar sudut. Lengkung jingga putus-putus ialah anggaran sudut kecil.",
+                simL: "Panjang, L (m):", simA: "Sudut lancaran, θ₀:", simReset: "Ulang", simSend: "Hantar ke kalkulator lengkok",
+                simPlay: "Main", simPause: "Jeda", legSim: "Simulasi", legSmall: "Sudut kecil",
+                stAngle: "Sudut θ", stTime: "Masa t", stMeas: "T diukur", stT: "T tepat", stT0: "T₀ sudut kecil", stDiff: "T lawan T₀",
+                fillAll: "Sila isi semua medan wajib dengan nombor yang sah.",
+
+                pNote: "Ukur L dari titik gantung ke pusat bob. Masa beberapa ayunan (contoh 20) untuk ketepatan.",
+                pL: "Panjang bandul, L (m):", pN: "Bilangan ayunan penuh, N:", pTime: "Masa untuk N ayunan, t (s):",
+                pErr: "Panjang, bilangan ayunan dan masa mesti positif.",
+                rT: "Tempoh, T", rG: "Pecutan graviti, g", rRef: "Nilai rujukan", rPct: "Peratus ralat",
+
+                qNote: "Q negatif bermaksud haba hilang. Isi masa (t) untuk mendapatkan kadar.",
+                state: "Pilih Keadaan (State):",
+                qMass: "Jisim, m (gram):", qShc: "Muatan Haba Tentu, c (J kg⁻¹ °C⁻¹):",
+                ti: "Suhu Awal, T<sub>i</sub> (°C):", tf: "Suhu Akhir, T<sub>f</sub> (°C):",
+                phTi: "Contoh: 30", phTf: "Contoh: 20.2",
+                qTime: "Masa, t (s) (pilihan):",
+                resMode: "Mod Dipilih", resDelta: "Perubahan Suhu (Δθ)", resQ: "Jumlah Haba (Q)",
+                resRateQ: "Kadar haba (Q/t)", resRateT: "Kadar perubahan suhu (Δθ/t)",
+
+                aNote: "Separuh ayunan = bergerak dari satu hujung ke hujung yang satu lagi (sudut +θ₀ ke −θ₀).",
+                aL: "Panjang bandul, L (m):", aTheta: "Sudut lancaran (amplitud), θ₀ (°):", aG: "Pecutan graviti, g (m/s²):",
+                aErr: "Panjang dan g mesti positif; sudut mesti antara 0° dan 180°.",
+                rRad: "Sudut dalam radian", rArc: "Panjang lengkok separuh ayunan, s",
+                rDisp: "Sesaran garis lurus, d", rDiff: "Beza (s − d)", rDiffPct: "Beza peratus ((s − d)/d)",
+                rT0: "Tempoh sudut kecil, T₀", rTa: "Tempoh pada sudut ini, T",
+                rTInc: "Pertambahan tempoh", rHalf: "Separuh tempoh, T/2",
+
+                cQ: "Tenaga haba, Q (J):", cMass: "Jisim, m (kg):", cDT: "Perubahan suhu, Δθ (°C):",
+                cErr: "Jisim mesti positif dan perubahan suhu tidak boleh sifar.",
+                cRes: "Muatan haba tentu, c",
+            },
+            en: {
+                pageTitle: "Physics Calculator", lang: "Language:", title: "Physics Calculator",
+                calcType: "Choose calculation:",
+                optPend: "Pendulum: gravitational acceleration (g)",
+                optQ: "Heat (Q = mcΔθ) & cooling rate",
+                optArc: "Pendulum: arc length & displacement",
+                optShc: "Specific heat capacity (c)",
+                calc: "Calculate Now",
+                optSim: "Live pendulum simulator (interactive)",
+                tabPhys: "Physics (SHM)", tabHeat: "Heat",
+                simTip: "Drag the bob to change the angle. The dashed orange curve is the small-angle approximation.",
+                simL: "Length, L (m):", simA: "Launch angle, θ₀:", simReset: "Restart", simSend: "Send to arc calculator",
+                simPlay: "Play", simPause: "Pause", legSim: "Simulation", legSmall: "Small-angle",
+                stAngle: "Angle θ", stTime: "Time t", stMeas: "Measured T", stT: "Exact T", stT0: "Small-angle T₀", stDiff: "T vs T₀",
+                fillAll: "Please fill in all required fields with valid numbers.",
+
+                pNote: "Measure L from the pivot to the centre of the bob. Time several swings (e.g. 20) for accuracy.",
+                pL: "Pendulum length, L (m):", pN: "Number of full oscillations, N:", pTime: "Time for N oscillations, t (s):",
+                pErr: "Length, number of oscillations and time must be positive.",
+                rT: "Time period, T", rG: "Gravitational acceleration, g", rRef: "Reference value", rPct: "Percentage error",
+
+                qNote: "Negative Q means heat is lost. Enter time (t) to get the rates.",
+                state: "Select State:",
+                qMass: "Mass, m (grams):", qShc: "Specific Heat Capacity, c (J kg⁻¹ °C⁻¹):",
+                ti: "Initial Temperature, T<sub>i</sub> (°C):", tf: "Final Temperature, T<sub>f</sub> (°C):",
+                phTi: "Example: 30", phTf: "Example: 20.2",
+                qTime: "Time, t (s) (optional):",
+                resMode: "Selected Mode", resDelta: "Temperature Change (Δθ)", resQ: "Total Heat (Q)",
+                resRateQ: "Heat transfer rate (Q/t)", resRateT: "Temperature change rate (Δθ/t)",
+
+                aNote: "A half-oscillation is the swing from one extreme to the other (angle +θ₀ to −θ₀).",
+                aL: "Pendulum length, L (m):", aTheta: "Launch angle (amplitude), θ₀ (°):", aG: "Gravitational acceleration, g (m/s²):",
+                aErr: "Length and g must be positive; angle must be between 0° and 180°.",
+                rRad: "Angle in radians", rArc: "Arc length of half-oscillation, s",
+                rDisp: "Straight-line displacement, d", rDiff: "Difference (s − d)", rDiffPct: "Percentage difference ((s − d)/d)",
+                rT0: "Small-angle period, T₀", rTa: "Period at this angle, T",
+                rTInc: "Period increase", rHalf: "Half period, T/2",
+
+                cQ: "Heat energy, Q (J):", cMass: "Mass, m (kg):", cDT: "Temperature change, Δθ (°C):",
+                cErr: "Mass must be positive and temperature change must be non-zero.",
+                cRes: "Specific heat capacity, c",
+            }
+        };
+
+        const G_REF = 9.81;
+        let currentLang = "ms";
+        const results = { pend: null, q: null, arc: null, shc: null };
+        const $ = id => document.getElementById(id);
+
+        function showPanel(name) {
+            const was = $("panel-" + name).classList.contains("active");
+            ["phys", "heat"].forEach(n => $("panel-" + n).classList.toggle("active", n === name));
+            document.querySelectorAll("#tabbar .tab").forEach(b => {
+                const on = b.dataset.panel === name;
+                b.classList.toggle("active", on);
+                b.setAttribute("aria-selected", on);
+            });
+            if (!was) window.scrollTo(0, 0);
+        }
+
+        function setLang(lang) {
+            if (!TEXT[lang]) lang = "ms";
+            currentLang = lang;
+            const t = TEXT[lang];
+            document.documentElement.lang = lang;
+            document.title = t.pageTitle;
+            $("langSelect").value = lang;
+            document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t[el.dataset.t]; });
+            document.querySelectorAll("[data-th]").forEach(el => { el.innerHTML = t[el.dataset.th]; });
+            document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = t[el.dataset.ph]; });
+            renderAll();
+            if (typeof updateSimText === "function") updateSimText();
+            try { localStorage.setItem("kalkulatorFizikLang", lang); } catch (e) {}
+        }
+
+        // ---------- paparan keputusan ----------
+        function fmt(v) {
+            if (v !== 0 && Math.abs(v) < 0.01) return v.toPrecision(3);
+            return v.toFixed(2);
+        }
+        function row(label, value, hl) {
+            return `<p>${label}: <span class="${hl ? "highlight" : ""}">${value}</span></p>`;
+        }
+        function setOut(name, html, isError) {
+            const box = $("out-" + name);
+            if (html === null) { box.hidden = true; return; }
+            box.hidden = false;
+            box.classList.toggle("error", !!isError);
+            box.innerHTML = html;
+        }
+
+        function renderAll() {
+            const t = TEXT[currentLang];
+            const r = results;
+
+            if (r.pend) setOut("pend", r.pend.type === "error" ? `<p>${t[r.pend.msg]}</p>` :
+                row(t.rT, fmt(r.pend.T) + " s") +
+                row(t.rG, fmt(r.pend.g) + " m s⁻²", true) +
+                row(t.rRef, G_REF + " m s⁻²") +
+                row(t.rPct, r.pend.pct.toFixed(2) + " %", true), r.pend.type === "error");
+
+            if (r.q) setOut("q",
+                row(t.resMode, r.q.mode, true) +
+                row(t.resDelta, fmt(r.q.deltaTheta) + " °C") +
+                row(t.resQ, fmt(r.q.Q) + " J", true) +
+                (r.q.rateQ !== null ? row(t.resRateQ, fmt(r.q.rateQ) + " W") : "") +
+                (r.q.rateT !== null ? row(t.resRateT, fmt(r.q.rateT) + " °C/s") : ""), false);
+
+            if (r.arc) setOut("arc", r.arc.type === "error" ? `<p>${t[r.arc.msg]}</p>` :
+                row(t.rRad, r.arc.rad.toFixed(4) + " rad") +
+                row(t.rArc, fmt(r.arc.s) + " m", true) +
+                row(t.rDisp, fmt(r.arc.d) + " m", true) +
+                row(t.rDiff, fmt(r.arc.diff) + " m") +
+                row(t.rDiffPct, r.arc.diffPct.toFixed(2) + " %") +
+                row(t.rT0, fmt(r.arc.T0) + " s") +
+                row(t.rTa, fmt(r.arc.Ta) + " s", true) +
+                row(t.rTInc, r.arc.inc.toFixed(2) + " %") +
+                row(t.rHalf, fmt(r.arc.Ta / 2) + " s"), r.arc.type === "error");
+
+            if (r.shc) setOut("shc", r.shc.type === "error" ? `<p>${t[r.shc.msg]}</p>` :
+                row(t.cRes, fmt(r.shc.c) + " J/(kg °C)", true), r.shc.type === "error");
+
+        }
+
+        function num(id) {
+            const v = parseFloat($(id).value);
+            return isNaN(v) ? null : v;
+        }
+
+        // ---------- pengiraan ----------
+        // Bandul ringkas: T = t/N, g = 4π²L/T²
+        function kiraPend() {
+            const L = num("pL"), N = num("pN"), time = num("pTime");
+            if (L === null || N === null || time === null) {
+                results.pend = { type: "error", msg: "fillAll" };
+            } else if (L > 0 && N > 0 && time > 0) {
+                const T = time / N;
+                const g = 4 * Math.PI * Math.PI * L / (T * T);
+                results.pend = { type: "ok", T, g, pct: Math.abs(g - G_REF) / G_REF * 100 };
+            } else {
+                results.pend = { type: "error", msg: "pErr" };
+            }
+            renderAll();
+        }
+
+        // Q = m × c × Δθ (jisim dalam gram) + kadar jika masa diberi
+        function kiraQ() {
+            const mode = document.querySelector('input[name="stateMode"]:checked').value;
+            const m_g = parseFloat($("mass").value) || 0;
+            const c = parseFloat($("shc").value) || 0;
+            const Ti = parseFloat($("tempInitial").value) || 0;
+            const Tf = parseFloat($("tempFinal").value) || 0;
+            const time = num("qTime");
+
+            const deltaTheta = Tf - Ti;
+            const Q = (m_g / 1000) * c * deltaTheta;
+            const hasTime = time !== null && time > 0;
+            results.q = {
+                mode, deltaTheta, Q,
+                rateQ: hasTime ? Q / time : null,
+                rateT: hasTime ? deltaTheta / time : null
+            };
+            renderAll();
+        }
+
+        // Purata aritmetik-geometri untuk tempoh tepat pada sebarang amplitud
+        function agm(a, b) {
+            for (let i = 0; i < 30 && Math.abs(a - b) > 1e-15; i++) {
+                const an = (a + b) / 2, bn = Math.sqrt(a * b);
+                a = an; b = bn;
+            }
+            return a;
+        }
+
+        // Panjang lengkok & sesaran separuh ayunan
+        function kiraArc() {
+            const L = num("aL"), deg = num("aTheta"), g = num("aG");
+            if (L === null || deg === null || g === null) {
+                results.arc = { type: "error", msg: "fillAll" };
+            } else if (L > 0 && g > 0 && deg > 0 && deg < 180) {
+                const rad = deg * Math.PI / 180;
+                const s = 2 * L * rad;                 // lengkok dari +θ₀ ke −θ₀
+                const d = 2 * L * Math.sin(rad);       // garis lurus antara dua hujung
+                const T0 = 2 * Math.PI * Math.sqrt(L / g);
+                const Ta = T0 / agm(1, Math.cos(rad / 2));
+                results.arc = {
+                    type: "ok", rad, s, d,
+                    diff: s - d, diffPct: (s - d) / d * 100,
+                    T0, Ta, inc: (Ta - T0) / T0 * 100
+                };
+            } else {
+                results.arc = { type: "error", msg: "aErr" };
+            }
+            renderAll();
+        }
+
+        // c = Q / (m × Δθ)
+        function kiraSHC() {
+            const Q = num("shcQ"), m = num("shcMass"), dT = num("shcDT");
+            if (Q === null || m === null || dT === null) {
+                results.shc = { type: "error", msg: "fillAll" };
+            } else if (m > 0 && dT !== 0) {
+                results.shc = { type: "ok", c: Q / (m * dT) };
+            } else {
+                results.shc = { type: "error", msg: "cErr" };
+            }
+            renderAll();
+        }
+
+
+        // ===================== Simulator bandul langsung =====================
+        const sim = { L: 1.0, th0: 40 * Math.PI / 180, th: 40 * Math.PI / 180, w: 0, t: 0,
+                      run: true, drag: false, last: null, hist: [], trail: [], lastCross: null, measured: null, geom: null };
+        const D2R = Math.PI / 180;
+
+        function simReset() {
+            sim.th = sim.th0; sim.w = 0; sim.t = 0;
+            sim.hist = []; sim.trail = []; sim.lastCross = null; sim.measured = null;
+        }
+        function simT0() { return 2 * Math.PI * Math.sqrt(sim.L / G_REF); }
+        function simTexact() { return simT0() / agm(1, Math.cos(sim.th0 / 2)); }
+
+        // Verlet: θ'' = -(g/L) sin θ  (bukan anggaran sudut kecil)
+        function simStep(dt) {
+            const k = G_REF / sim.L, prev = sim.th, a = -k * Math.sin(sim.th);
+            sim.th += sim.w * dt + 0.5 * a * dt * dt;
+            sim.w += 0.5 * (a - k * Math.sin(sim.th)) * dt;
+            sim.t += dt;
+            if (prev < 0 && sim.th >= 0 && sim.w > 0) {
+                const tc = sim.t - dt * sim.th / (sim.th - prev);
+                if (sim.lastCross !== null) sim.measured = tc - sim.lastCross;
+                sim.lastCross = tc;
+            }
+        }
+
+        function fitCanvas(c) {
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.round(c.clientWidth * dpr), h = Math.round(c.clientHeight * dpr);
+            if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+            const ctx = c.getContext("2d");
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return ctx;
+        }
+
+        function drawSim() {
+            const c = $("simCanvas"), W = c.clientWidth, H = c.clientHeight;
+            if (!W) return;
+            const ctx = fitCanvas(c);
+            ctx.clearRect(0, 0, W, H);
+            const px = W / 2, py = 24, sc = Math.min((H - 56) / 1.2, (W / 2 - 26) / 1.2), r = sim.L * sc;
+            const sx = Math.sin(sim.th0) * r, cy = Math.cos(sim.th0) * r;
+            const bx = px + Math.sin(sim.th) * r, by = py + Math.cos(sim.th) * r;
+
+            // lengkok separuh ayunan (s) dan garis lurus (d)
+            ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
+            ctx.strokeStyle = "#7aa7e6"; ctx.beginPath();
+            ctx.arc(px, py, r, Math.PI / 2 - sim.th0, Math.PI / 2 + sim.th0); ctx.stroke();
+            ctx.strokeStyle = "#f0932b"; ctx.beginPath();
+            ctx.moveTo(px - sx, py + cy); ctx.lineTo(px + sx, py + cy); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.font = "12px Arial"; ctx.textAlign = "center";
+            ctx.textAlign = "left"; ctx.fillStyle = "#c26a00"; ctx.fillText("d = " + fmt(2 * sim.L * Math.sin(sim.th0)) + " m", 8, 16);
+            ctx.textAlign = "right"; ctx.fillStyle = "#3a6bb5"; ctx.fillText("s = " + fmt(2 * sim.L * sim.th0) + " m", W - 8, 16);
+            ctx.textAlign = "center";
+            
+
+            // kesan gerakan
+            sim.trail.forEach((p, i) => {
+                ctx.fillStyle = "rgba(0,123,255," + (i / sim.trail.length * 0.22) + ")";
+                ctx.beginPath(); ctx.arc(p[0], p[1], 11, 0, 6.3); ctx.fill();
+            });
+            if (sim.run && !sim.drag) { sim.trail.push([bx, by]); if (sim.trail.length > 14) sim.trail.shift(); }
+
+            // garis tegak, tali, sudut
+            ctx.strokeStyle = "#9aa7b8"; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+            ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + r); ctx.stroke(); ctx.setLineDash([]);
+            ctx.strokeStyle = "#d9534f"; ctx.lineWidth = 2; ctx.beginPath();
+            const a0 = Math.PI / 2, a1 = Math.PI / 2 - sim.th;
+            ctx.arc(px, py, 34, Math.min(a0, a1), Math.max(a0, a1)); ctx.stroke();
+            ctx.fillStyle = "#d9534f";
+            ctx.fillText(Math.abs(sim.th / D2R).toFixed(0) + "°", px + (sim.th >= 0 ? -20 : 20), py + 56);
+            ctx.strokeStyle = "#2c3e50"; ctx.lineWidth = 2; ctx.beginPath();
+            ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+
+            // penyokong dan bob
+            ctx.fillStyle = "#2c3e50"; ctx.fillRect(px - 32, py - 10, 64, 6);
+            ctx.beginPath(); ctx.arc(px, py, 3.5, 0, 6.3); ctx.fill();
+            const g = ctx.createRadialGradient(bx - 4, by - 4, 2, bx, by, 14);
+            g.addColorStop(0, "#8fc8ff"); g.addColorStop(1, "#0062d6");
+            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by, 13, 0, 6.3); ctx.fill();
+            if (sim.drag) {
+                ctx.strokeStyle = "rgba(0,123,255,.4)"; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.arc(bx, by, 19, 0, 6.3); ctx.stroke();
+            }
+            sim.geom = { px, py, bx, by };
+        }
+
+        function drawGraph() {
+            const c = $("graphCanvas"), W = c.clientWidth, H = c.clientHeight;
+            if (!W) return;
+            const ctx = fitCanvas(c), t = TEXT[currentLang];
+            ctx.clearRect(0, 0, W, H);
+            const T0 = simT0(), win = 2.2 * T0, w0 = sim.t > win ? sim.t - win : 0;
+            const amp = sim.th0 * 1.2, mid = H / 2, ys = th => mid - th / amp * (mid - 16);
+            ctx.strokeStyle = "rgba(255,255,255,.18)"; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(W, mid); ctx.stroke();
+
+            // anggaran sudut kecil: θ₀ cos(√(g/L) t)
+            ctx.strokeStyle = "#ffb74d"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]); ctx.beginPath();
+            const om = Math.sqrt(G_REF / sim.L);
+            for (let x = 0; x <= W; x += 3) {
+                const tt = w0 + x / W * win, y = ys(sim.th0 * Math.cos(om * tt));
+                x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke(); ctx.setLineDash([]);
+
+            // simulasi sebenar
+            ctx.strokeStyle = "#4dabff"; ctx.lineWidth = 2.2; ctx.beginPath();
+            sim.hist.forEach((p, i) => {
+                const x = (p[0] - w0) / win * W, y = ys(p[1]);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            ctx.font = "11px Arial"; ctx.textAlign = "left";
+            ctx.fillStyle = "#4dabff"; ctx.fillText("— " + t.legSim, 8, 14);
+            ctx.fillStyle = "#ffb74d"; ctx.fillText("- - " + t.legSmall, 8, 28);
+        }
+
+        function updateSimStats() {
+            const T = simTexact(), T0 = simT0();
+            $("stA").textContent = (sim.th / D2R).toFixed(1) + "°";
+            $("stTm").textContent = sim.t.toFixed(2) + " s";
+            $("stM").textContent = sim.measured ? sim.measured.toFixed(3) + " s" : "–";
+            $("stT").textContent = T.toFixed(3) + " s";
+            $("stT0").textContent = T0.toFixed(3) + " s";
+            $("stD").textContent = "+" + ((T / T0 - 1) * 100).toFixed(2) + " %";
+        }
+
+        function updateSimText() {
+            const t = TEXT[currentLang];
+            $("simPlay").textContent = sim.run ? t.simPause : t.simPlay;
+            $("simLval").textContent = sim.L.toFixed(2);
+            $("simAval").textContent = Math.round(sim.th0 / D2R);
+            $("simLen").value = sim.L;
+            $("simAng").value = Math.round(sim.th0 / D2R);
+        }
+
+        function simToggle() { sim.run = !sim.run; updateSimText(); }
+        function simRestart() { simReset(); sim.run = true; updateSimText(); }
+        function simSend() {
+            $("aL").value = sim.L.toFixed(2);
+            $("aTheta").value = (sim.th0 / D2R).toFixed(1);
+            kiraArc();
+            showPanel("phys");
+            $("panel-arc").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function simLoop(now) {
+            requestAnimationFrame(simLoop);
+            if (!$("panel-phys").classList.contains("active") || document.hidden) { sim.last = null; return; }
+            const dt = sim.last === null ? 0 : Math.min((now - sim.last) / 1000, 0.05);
+            sim.last = now;
+            if (sim.run && !sim.drag && dt > 0) {
+                const n = Math.ceil(dt / 0.004);
+                for (let i = 0; i < n; i++) simStep(dt / n);
+                sim.hist.push([sim.t, sim.th]);
+                const lim = sim.t - 2.2 * simT0() - 0.1;
+                while (sim.hist.length && sim.hist[0][0] < lim) sim.hist.shift();
+            }
+            drawSim(); drawGraph(); updateSimStats();
+        }
+
+        $("simLen").oninput = e => { sim.L = +e.target.value; simReset(); updateSimText(); };
+        $("simAng").oninput = e => { sim.th0 = +e.target.value * D2R; simReset(); updateSimText(); };
+
+        // seret bob dengan jari / tetikus
+        (function simPointer() {
+            const c = $("simCanvas");
+            const pos = e => { const b = c.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+            function setFrom(x, y) {
+                const g = sim.geom; if (!g) return;
+                const a = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, Math.atan2(x - g.px, y - g.py)));
+                sim.th0 = Math.max(Math.abs(a), 1 * D2R);
+                simReset();
+                sim.th = a < 0 ? -sim.th0 : sim.th0;
+                updateSimText();
+            }
+            c.addEventListener("pointerdown", e => {
+                const [x, y] = pos(e), g = sim.geom;
+                if (g && Math.hypot(x - g.bx, y - g.by) < 34) {
+                    sim.drag = true; c.setPointerCapture(e.pointerId); c.style.cursor = "grabbing"; setFrom(x, y);
+                }
+            });
+            c.addEventListener("pointermove", e => { if (sim.drag) { const [x, y] = pos(e); setFrom(x, y); } });
+            const end = () => { if (sim.drag) { sim.drag = false; sim.run = true; c.style.cursor = "grab"; updateSimText(); } };
+            c.addEventListener("pointerup", end);
+            c.addEventListener("pointercancel", end);
+        })();
+
+        simReset(); updateSimText();
+        requestAnimationFrame(simLoop);
+        $("tabbar").addEventListener("click", e => {
+            const b = e.target.closest(".tab");
+            if (b) showPanel(b.dataset.panel);
+        });
+
+        (function init() {
+            let saved = "ms";
+            try { saved = localStorage.getItem("kalkulatorFizikLang") || "ms"; } catch (e) {}
+            setLang(saved);
+        })();
+
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("sw.js").catch(function () {});
+            });
+        }
+    </script>
+
+</body>
+</html>
