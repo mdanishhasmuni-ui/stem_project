@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,15 +54,6 @@
             background: white;
             cursor: pointer;
         }
-        #panelSelect {
-            width: 100%;
-            padding: 11px 10px;
-            font-weight: bold;
-            color: #004a99;
-            background: #e3f0ff;
-            border: 2px solid #007BFF;
-            margin-bottom: 16px;
-        }
         .panel { display: none; }
         .panel.active { display: block; }
         .radio-group {
@@ -114,12 +105,13 @@
         .card { border-radius: 18px; box-shadow: 0 10px 30px rgba(20, 60, 120, 0.14); }
         h2 { background: linear-gradient(90deg, #0062d6, #00b4d8); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .sim-canvas, .graph-canvas { width: 100%; display: block; border-radius: 12px; }
-        .sim-canvas { height: 190px; background: linear-gradient(#f9fcff, #e4eefc); cursor: grab; margin-bottom: 8px; touch-action: none; }
-        .graph-canvas { height: 120px; background: #0f1b2d; margin-bottom: 10px; }
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+        .sim-canvas { height: 180px; background: linear-gradient(#f9fcff, #e4eefc); cursor: grab; margin-bottom: 8px; touch-action: none; }
+        .graph-canvas { height: 110px; background: #0f1b2d; margin-bottom: 8px; }
+        .graph-label { font-size: 11px; color: #334; margin: 4px 0 2px; font-weight: bold; }
+        .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 12px; margin-top: 8px; }
         .stat { background: #eef4ff; border-radius: 10px; padding: 8px 4px; text-align: center; }
         .stat small { display: block; font-size: 11px; color: #667; margin-bottom: 2px; }
-        .stat b { font-size: 14px; color: #0a3d91; }
+        .stat b { font-size: 13px; color: #0a3d91; }
         .slider-row { margin-bottom: 10px; }
         .slider-row input { width: 100%; accent-color: #007BFF; }
         .btn-row { display: flex; gap: 8px; margin-top: 6px; }
@@ -127,19 +119,28 @@
         button.mini.alt { background: #e3ebf5; color: #223; }
         .card { min-width: 0; }
         /* ---- Tab bar ---- */
-        .tabbar { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; overflow-x: auto; background: #fff;
-                  margin: 0 -8px 14px; padding: 6px 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .tabbar::-webkit-scrollbar { display: none; }
-        .tab { flex: 0 0 auto; border: none; background: #eef2f5; color: #445; font-weight: bold; font-size: 14px;
-               padding: 10px 15px; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+        .tabbar { display: flex; gap: 6px; background: #fff; margin: 0 -8px 14px; padding: 6px 8px; }
+        .tabbar .tab { flex: 1; border: none; background: #eef2f5; color: #445; font-weight: bold; font-size: 15px; padding: 12px 8px; border-radius: 12px; cursor: pointer; text-align: center; transition: background 0.15s, color 0.15s; }
         .tab:hover { background: #dde6ec; }
         .tab.active { background: linear-gradient(90deg, #0062d6, #00a0e0); color: #fff; box-shadow: 0 3px 8px rgba(0, 98, 214, 0.3); }
-        .tabbar { overflow: visible; }
-        .tabbar .tab { flex: 1; border-radius: 12px; padding: 12px 8px; font-size: 15px; text-align: center; }
         .section { margin-top: 26px; padding-top: 20px; border-top: 2px solid #e3e9f0; }
         .section:first-child { margin-top: 0; padding-top: 0; border-top: none; }
         .sec-title { margin: 0 0 8px; font-size: 17px; color: #0a3d91; }
-    
+
+        /* ---- Table Styles ---- */
+        .table-subtabs { display: flex; gap: 6px; margin-bottom: 10px; }
+        .subtab { flex: 1; padding: 6px; border: 1px solid #007BFF; background: #fff; color: #007BFF; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
+        .subtab.active { background: #007BFF; color: #fff; }
+        .table-container { overflow-x: auto; max-height: 200px; overflow-y: auto; border: 1px solid #e3e9f0; border-radius: 8px; margin-top: 8px; }
+        table.data-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; }
+        table.data-table th { background: #0a3d91; color: white; padding: 6px 3px; position: sticky; top: 0; }
+        table.data-table td { padding: 5px 3px; border-bottom: 1px solid #eef2f5; }
+        table.data-table tr:nth-child(even) { background: #f9fcff; }
+        .table-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .table-actions button { flex: 1; padding: 6px 10px; border-radius: 6px; border: none; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-clear { background: #ffebee; color: #c62828; }
+        .btn-export { background: #e8f5e9; color: #2e7d32; }
+
         /* ---- Desktop view (wide screens) ---- */
         @media (min-width: 900px) {
             body { padding: 32px; }
@@ -150,7 +151,6 @@
                 margin: 0; padding: 20px; border: 1px solid #e3e9f0;
                 border-radius: 14px; background: #fafcff;
             }
-            /* simulator keeps its phone-size width; calculators fill the rest */
             #panel-phys.active, #panel-heat.active {
                 display: grid; grid-template-columns: 420px 1fr;
                 gap: 22px; align-items: start;
@@ -178,135 +178,195 @@
             <button class="tab" data-panel="heat" data-t="tabHeat"></button>
         </div>
 
-                <div class="panel active" id="panel-phys">
-        <!-- 0. Simulator bandul langsung -->
-        <div class="section" id="panel-sim">
-            <h3 class="sec-title" data-t="optSim"></h3>
-            <p class="hint">θ'' = −(g/L) sin θ</p>
-            <p class="note" data-t="simTip"></p>
-            <canvas id="simCanvas" class="sim-canvas"></canvas>
-            <canvas id="graphCanvas" class="graph-canvas"></canvas>
-            <div class="stats">
-                <div class="stat"><small data-t="stAngle"></small><b id="stA">-</b></div>
-                <div class="stat"><small data-t="stTime"></small><b id="stTm">-</b></div>
-                <div class="stat"><small data-t="stMeas"></small><b id="stM">-</b></div>
-                <div class="stat"><small data-t="stT"></small><b id="stT">-</b></div>
-                <div class="stat"><small data-t="stT0"></small><b id="stT0">-</b></div>
-                <div class="stat"><small data-t="stDiff"></small><b id="stD">-</b></div>
-            </div>
-            <div class="slider-row">
-                <label><span data-t="simL"></span> <b id="simLval">1.00</b></label>
-                <input type="range" id="simLen" min="0.2" max="1.2" step="0.05" value="1">
-            </div>
-            <div class="slider-row">
-                <label><span data-t="simA"></span> <b id="simAval">40</b>°</label>
-                <input type="range" id="simAng" min="1" max="90" step="1" value="40">
-            </div>
-            <div class="btn-row">
-                <button class="mini" id="simPlay" onclick="simToggle()"></button>
-                <button class="mini alt" onclick="simRestart()" data-t="simReset"></button>
-            </div>
-            <button class="calc" onclick="simSend()" data-t="simSend"></button>
-        </div>
+        <div class="panel active" id="panel-phys">
+            <!-- 0. Live pendulum simulator -->
+            <div class="section" id="panel-sim">
+                <h3 class="sec-title" data-t="optSim"></h3>
+                <p class="hint">θ'' = −(g/L) sin θ</p>
+                <p class="note" data-t="simTip"></p>
+                <canvas id="simCanvas" class="sim-canvas"></canvas>
+                
+                <div class="graph-label" id="lblGraph1">Graph: T² vs Length (L)</div>
+                <canvas id="graphCanvasT2" class="graph-canvas"></canvas>
+                
+                <div class="graph-label" id="lblGraph2">Graph: Distance (Blue) & Displacement (Orange) vs Time (t)</div>
+                <canvas id="graphCanvasMotion" class="graph-canvas"></canvas>
 
-        <!-- 1. Bandul ringkas: g -->
-        <div class="section" id="panel-pend">
-            <h3 class="sec-title" data-t="optPend"></h3>
-            <p class="hint">T = t / N &nbsp;&nbsp; g = 4π²L / T²</p>
-            <p class="note" data-t="pNote"></p>
-            <div class="input-group">
-                <label for="pL" data-t="pL"></label>
-                <input type="number" id="pL" step="any">
-            </div>
-            <div class="input-group">
-                <label for="pN" data-t="pN"></label>
-                <input type="number" id="pN" step="any">
-            </div>
-            <div class="input-group">
-                <label for="pTime" data-t="pTime"></label>
-                <input type="number" id="pTime" step="any">
-            </div>
-            <button class="calc" onclick="kiraPend()" data-t="calc"></button>
-            <div class="result" id="out-pend" hidden></div>
-        </div>
+                <div class="stats">
+                    <div class="stat"><small data-t="stAngle"></small><b id="stA">-</b></div>
+                    <div class="stat"><small data-t="stMeas"></small><b id="stM">-</b></div>
+                    <div class="stat"><small data-t="stT"></small><b id="stT">-</b></div>
+                    <div class="stat"><small data-t="stG"></small><b id="stG">-</b></div>
+                </div>
+                
+                <!-- Flexible inputs: Length L and Oscillations N -->
+                <div class="input-group" style="margin-bottom: 8px;">
+                    <label for="simLenNum"><span data-t="simL"></span></label>
+                    <input type="number" id="simLenNum" value="1.0" step="0.05" min="0.01" oninput="updateCustomLength(this.value)">
+                </div>
 
-        <!-- 3. Panjang lengkok & sesaran -->
-        <div class="section" id="panel-arc">
-            <h3 class="sec-title" data-t="optArc"></h3>
-            <p class="hint">s = 2Lθ₀ &nbsp;&nbsp; d = 2L sin θ₀</p>
-            <p class="note" data-t="aNote"></p>
-            <div class="input-group">
-                <label for="aL" data-t="aL"></label>
-                <input type="number" id="aL" step="any">
-            </div>
-            <div class="input-group">
-                <label for="aTheta" data-t="aTheta"></label>
-                <input type="number" id="aTheta" step="any">
-            </div>
-            <div class="input-group">
-                <label for="aG" data-t="aG"></label>
-                <input type="number" id="aG" value="9.81" step="any">
-            </div>
-            <button class="calc" onclick="kiraArc()" data-t="calc"></button>
-            <div class="result" id="out-arc" hidden></div>
-        </div>
+                <div class="input-group" style="margin-bottom: 10px;">
+                    <label for="simNNum"><span data-t="simN"></span></label>
+                    <input type="number" id="simNNum" value="10" step="1" min="1" oninput="updateCustomN(this.value)">
+                </div>
 
+                <div class="slider-row">
+                    <label><span data-t="simA"></span> <b id="simAval">40</b>°</label>
+                    <input type="range" id="simAng" min="1" max="90" step="1" value="40">
+                </div>
+                <div class="btn-row">
+                    <button class="mini" id="simPlay" onclick="simToggle()"></button>
+                    <button class="mini alt" onclick="simRestart()" data-t="simReset"></button>
+                </div>
+                <button class="calc" onclick="simSend()" data-t="simSend"></button>
+            </div>
+
+            <!-- 1. Simple Pendulum: g -->
+            <div class="section" id="panel-pend">
+                <h3 class="sec-title" data-t="optPend"></h3>
+                <p class="hint">T = t / N    g = 4π²L / T²</p>
+                <p class="note" data-t="pNote"></p>
+                <div class="input-group">
+                    <label for="pL" data-t="pL"></label>
+                    <input type="number" id="pL" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="pN" data-t="pN"></label>
+                    <input type="number" id="pN" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="pTime" data-t="pTime"></label>
+                    <input type="number" id="pTime" step="any">
+                </div>
+                <button class="calc" onclick="kiraPend()" data-t="calc"></button>
+                <div class="result" id="out-pend" hidden></div>
+            </div>
+
+            <!-- 3. Arc length & displacement -->
+            <div class="section" id="panel-arc">
+                <h3 class="sec-title" data-t="optArc"></h3>
+                <p class="hint">s = 2Lθ₀    d = 2L sin θ₀</p>
+                <p class="note" data-t="aNote"></p>
+                <div class="input-group">
+                    <label for="aL" data-t="aL"></label>
+                    <input type="number" id="aL" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="aTheta" data-t="aTheta"></label>
+                    <input type="number" id="aTheta" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="aG" data-t="aG"></label>
+                    <input type="number" id="aG" value="9.81" step="any">
+                </div>
+                <button class="calc" onclick="kiraArc()" data-t="calc"></button>
+                <div class="result" id="out-arc" hidden></div>
+
+                <!-- Record Table for SHM Calculations (Logged via simSend) -->
+                <div style="margin-top: 24px;">
+                    <h3 class="sec-title" data-t="shmTblTitle"></h3>
+                    <div class="table-subtabs">
+                        <button class="subtab active" id="btnTabSimLog" onclick="switchSHMTableMode('SimLog')">Simulated Log (Arc)</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="shmTableHead">
+                            <!-- Dynamic Header -->
+                        </table>
+                    </div>
+                    <div class="table-actions">
+                        <button class="btn-clear" onclick="clearSHMRecords()" data-t="tblClear"></button>
+                        <button class="btn-export" onclick="exportSHMCSV()" data-t="tblExport"></button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="panel" id="panel-heat">
-        <!-- 2. Haba Q = mcΔθ + kadar -->
-        <div class="section" id="panel-q">
-            <h3 class="sec-title" data-t="optQ"></h3>
-            <p class="hint">Q = m × c × Δθ</p>
-            <p class="note" data-t="qNote"></p>
-            <label data-t="state"></label>
-            <div class="radio-group">
-                <label><input type="radio" name="stateMode" value="Static" checked> Static</label>
-                <label><input type="radio" name="stateMode" value="Oscillation"> Oscillation</label>
-            </div>
-            <div class="input-group">
-                <label for="mass" data-t="qMass"></label>
-                <input type="number" id="mass" value="65.06" step="any">
-            </div>
-            <div class="input-group">
-                <label for="shc" data-t="qShc"></label>
-                <input type="number" id="shc" value="380" step="any">
-            </div>
-            <div class="input-group">
-                <label for="tempInitial" data-th="ti"></label>
-                <input type="number" id="tempInitial" data-ph="phTi" step="any">
-            </div>
-            <div class="input-group">
-                <label for="tempFinal" data-th="tf"></label>
-                <input type="number" id="tempFinal" data-ph="phTf" step="any">
-            </div>
-            <div class="input-group">
-                <label for="qTime" data-t="qTime"></label>
-                <input type="number" id="qTime" step="any">
-            </div>
-            <button class="calc" onclick="kiraQ()" data-t="calc"></button>
-            <div class="result" id="out-q" hidden></div>
-        </div>
+            <!-- 2. Heat Q = mcΔθ + rate -->
+            <div class="section" id="panel-q">
+                <h3 class="sec-title" data-t="optQ"></h3>
+                <p class="hint">Q = m × c × Δθ</p>
+                <p class="note" data-t="qNote"></p>
+                <label data-t="state"></label>
+                <div class="radio-group">
+                    <label><input type="radio" name="stateMode" value="Static" checked> Static</label>
+                    <label><input type="radio" name="stateMode" value="Oscillation"> Oscillation</label>
+                </div>
+                <div class="input-group">
+                    <label for="mass" data-t="qMass"></label>
+                    <input type="number" id="mass" value="65.06" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="shc" data-t="qShc"></label>
+                    <input type="number" id="shc" value="380" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="tempInitial" data-th="ti"></label>
+                    <input type="number" id="tempInitial" data-ph="phTi" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="tempFinal" data-th="tf"></label>
+                    <input type="number" id="tempFinal" data-ph="phTf" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="qTime" data-t="qTime"></label>
+                    <input type="number" id="qTime" step="any">
+                </div>
+                <button class="calc" onclick="kiraQ()" data-t="calc"></button>
+                <div class="result" id="out-q" hidden></div>
 
-        <!-- 4. Muatan haba tentu -->
-        <div class="section" id="panel-shc">
-            <h3 class="sec-title" data-t="optShc"></h3>
-            <p class="hint">c = Q / (m × Δθ)</p>
-            <div class="input-group">
-                <label for="shcQ" data-t="cQ"></label>
-                <input type="number" id="shcQ" step="any">
+                <!-- Record Table for Heat Calculations -->
+                <div style="margin-top: 24px;">
+                    <h3 class="sec-title" data-t="tblTitle"></h3>
+                    <div class="table-subtabs">
+                        <button class="subtab active" id="btnTabStatic" onclick="switchTableMode('Static')">Static</button>
+                        <button class="subtab" id="btnTabOsc" onclick="switchTableMode('Oscillation')">Oscillation</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>m (g)</th>
+                                    <th>c</th>
+                                    <th>T<sub>i</sub> (°C)</th>
+                                    <th>T<sub>f</sub> (°C)</th>
+                                    <th>Δθ (°C)</th>
+                                    <th>Q (J)</th>
+                                    <th>Q/t (W)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="heatTableBody">
+                                <tr><td colspan="8" style="color:#888;" data-t="tblEmpty"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-actions">
+                        <button class="btn-clear" onclick="clearHeatRecords()" data-t="tblClear"></button>
+                        <button class="btn-export" onclick="exportHeatCSV()" data-t="tblExport"></button>
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label for="shcMass" data-t="cMass"></label>
-                <input type="number" id="shcMass" step="any">
+
+            <!-- 4. Specific heat capacity -->
+            <div class="section" id="panel-shc">
+                <h3 class="sec-title" data-t="optShc"></h3>
+                <p class="hint">c = Q / (m × Δθ)</p>
+                <div class="input-group">
+                    <label for="shcQ" data-t="cQ"></label>
+                    <input type="number" id="shcQ" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="shcMass" data-t="cMass"></label>
+                    <input type="number" id="shcMass" step="any">
+                </div>
+                <div class="input-group">
+                    <label for="shcDT" data-t="cDT"></label>
+                    <input type="number" id="shcDT" step="any">
+                </div>
+                <button class="calc" onclick="kiraSHC()" data-t="calc"></button>
+                <div class="result" id="out-shc" hidden></div>
             </div>
-            <div class="input-group">
-                <label for="shcDT" data-t="cDT"></label>
-                <input type="number" id="shcDT" step="any">
-            </div>
-            <button class="calc" onclick="kiraSHC()" data-t="calc"></button>
-            <div class="result" id="out-shc" hidden></div>
-        </div>
         </div>
     </div>
 
@@ -322,10 +382,12 @@
                 calc: "Kira Sekarang",
                 optSim: "Simulator bandul langsung (interaktif)",
                 tabPhys: "Fizik (SHM)", tabHeat: "Haba",
-                simTip: "Seret bob untuk menukar sudut. Lengkung jingga putus-putus ialah anggaran sudut kecil.",
-                simL: "Panjang, L (m):", simA: "Sudut lancaran, θ₀:", simReset: "Ulang", simSend: "Hantar ke kalkulator lengkok",
-                simPlay: "Main", simPause: "Jeda", legSim: "Simulasi", legSmall: "Sudut kecil",
-                stAngle: "Sudut θ", stTime: "Masa t", stMeas: "T diukur", stT: "T tepat", stT0: "T₀ sudut kecil", stDiff: "T lawan T₀",
+                simTip: "Seret bob untuk menukar sudut. Data auto-sync ke kalkulator manual di sebelah.",
+                simL: "Panjang, L (m):", simN: "Bilangan ayunan, N:", simA: "Sudut lancaran, θ₀:", simReset: "Ulang", simSend: "Hantar ke kalkulator lengkok",
+                simPlay: "Main", simPause: "Jeda",
+                stAngle: "Sudut θ", stMeas: "Masa N ayunan", stT: "Tempoh T", stG: "Graviti (g)",
+                graphT2Title: "Graf: T² melawan Panjang (L)",
+                graphMotionTitle: "Graf: Jarak (Biru) & Sesaran (Oren) melawan Masa (t)",
                 fillAll: "Sila isi semua medan wajib dengan nombor yang sah.",
 
                 pNote: "Ukur L dari titik gantung ke pusat bob. Masa beberapa ayunan (contoh 20) untuk ketepatan.",
@@ -342,6 +404,12 @@
                 resMode: "Mod Dipilih", resDelta: "Perubahan Suhu (Δθ)", resQ: "Jumlah Haba (Q)",
                 resRateQ: "Kadar haba (Q/t)", resRateT: "Kadar perubahan suhu (Δθ/t)",
 
+                tblTitle: "Jadual Rekod Pengiraan Haba",
+                shmTblTitle: "Jadual Log Simulasi SHM (Send)",
+                tblEmpty: "Tiada rekod data lagi. Tekan 'Hantar ke kalkulator lengkok' dari simulator.",
+                tblClear: "Padam Rekod Log",
+                tblExport: "Eksport CSV",
+
                 aNote: "Separuh ayunan = bergerak dari satu hujung ke hujung yang satu lagi (sudut +θ₀ ke −θ₀).",
                 aL: "Panjang bandul, L (m):", aTheta: "Sudut lancaran (amplitud), θ₀ (°):", aG: "Pecutan graviti, g (m/s²):",
                 aErr: "Panjang dan g mesti positif; sudut mesti antara 0° dan 180°.",
@@ -351,7 +419,7 @@
                 rTInc: "Pertambahan tempoh", rHalf: "Separuh tempoh, T/2",
 
                 cQ: "Tenaga haba, Q (J):", cMass: "Jisim, m (kg):", cDT: "Perubahan suhu, Δθ (°C):",
-                cErr: "Jisim mesti positif dan perubahan suhu tidak boleh sifar.",
+                cErr: "Mass must be positive and temperature change must be non-zero.",
                 cRes: "Muatan haba tentu, c",
             },
             en: {
@@ -364,10 +432,12 @@
                 calc: "Calculate Now",
                 optSim: "Live pendulum simulator (interactive)",
                 tabPhys: "Physics (SHM)", tabHeat: "Heat",
-                simTip: "Drag the bob to change the angle. The dashed orange curve is the small-angle approximation.",
-                simL: "Length, L (m):", simA: "Launch angle, θ₀:", simReset: "Restart", simSend: "Send to arc calculator",
-                simPlay: "Play", simPause: "Pause", legSim: "Simulation", legSmall: "Small-angle",
-                stAngle: "Angle θ", stTime: "Time t", stMeas: "Measured T", stT: "Exact T", stT0: "Small-angle T₀", stDiff: "T vs T₀",
+                simTip: "Drag bob to change angle. Data auto-syncs to the manual calculator on the right.",
+                simL: "Length, L (m):", simN: "Oscillations, N:", simA: "Launch angle, θ₀:", simReset: "Restart", simSend: "Send to arc calculator",
+                simPlay: "Play", simPause: "Pause",
+                stAngle: "Angle θ", stMeas: "Time for N swings", stT: "Exact Period T", stG: "Gravity (g)",
+                graphT2Title: "Graph: T² vs Length (L)",
+                graphMotionTitle: "Graph: Distance (Blue) & Displacement (Orange) vs Time (t)",
                 fillAll: "Please fill in all required fields with valid numbers.",
 
                 pNote: "Measure L from the pivot to the centre of the bob. Time several swings (e.g. 20) for accuracy.",
@@ -384,10 +454,16 @@
                 resMode: "Selected Mode", resDelta: "Temperature Change (Δθ)", resQ: "Total Heat (Q)",
                 resRateQ: "Heat transfer rate (Q/t)", resRateT: "Temperature change rate (Δθ/t)",
 
+                tblTitle: "Heat Calculation Data Log",
+                shmTblTitle: "SHM Simulation Log (Send)",
+                tblEmpty: "No recorded data yet. Click 'Send to arc calculator' from simulator.",
+                tblClear: "Clear Log Records",
+                tblExport: "Export CSV",
+
                 aNote: "A half-oscillation is the swing from one extreme to the other (angle +θ₀ to −θ₀).",
                 aL: "Pendulum length, L (m):", aTheta: "Launch angle (amplitude), θ₀ (°):", aG: "Gravitational acceleration, g (m/s²):",
                 aErr: "Length and g must be positive; angle must be between 0° and 180°.",
-                rRad: "Angle in radians", rArc: "Arc length of half-oscillation, s",
+                rRad: "Angle in radians", rArc: "Half-oscillation arc length, s",
                 rDisp: "Straight-line displacement, d", rDiff: "Difference (s − d)", rDiffPct: "Percentage difference ((s − d)/d)",
                 rT0: "Small-angle period, T₀", rTa: "Period at this angle, T",
                 rTInc: "Period increase", rHalf: "Half period, T/2",
@@ -401,6 +477,10 @@
         const G_REF = 9.81;
         let currentLang = "en";
         const results = { pend: null, q: null, arc: null, shc: null };
+        const heatRecords = { Static: [], Oscillation: [] };
+        const shmRecords = { SimLog: [] };
+        let activeTableMode = "Static";
+        let activeSHMTableMode = "SimLog";
         const $ = id => document.getElementById(id);
 
         function showPanel(name) {
@@ -415,7 +495,7 @@
         }
 
         function setLang(lang) {
-            if (!TEXT[lang]) lang = "ms";
+            if (!TEXT[lang]) lang = "en";
             currentLang = lang;
             const t = TEXT[lang];
             document.documentElement.lang = lang;
@@ -424,12 +504,15 @@
             document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t[el.dataset.t]; });
             document.querySelectorAll("[data-th]").forEach(el => { el.innerHTML = t[el.dataset.th]; });
             document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = t[el.dataset.ph]; });
+            $("lblGraph1").textContent = t.graphT2Title;
+            $("lblGraph2").textContent = t.graphMotionTitle;
             renderAll();
+            renderHeatTable();
+            renderSHMTable();
             if (typeof updateSimText === "function") updateSimText();
             try { localStorage.setItem("kalkulatorFizikLang", lang); } catch (e) {}
         }
 
-        // ---------- paparan keputusan ----------
         function fmt(v) {
             if (v !== 0 && Math.abs(v) < 0.01) return v.toPrecision(3);
             return v.toFixed(2);
@@ -474,8 +557,7 @@
                 row(t.rHalf, fmt(r.arc.Ta / 2) + " s"), r.arc.type === "error");
 
             if (r.shc) setOut("shc", r.shc.type === "error" ? `<p>${t[r.shc.msg]}</p>` :
-                row(t.cRes, fmt(r.shc.c) + " J/(kg °C)", true), r.shc.type === "error");
-
+                row(r.shc.c ? t.cRes : "", fmt(r.shc.c) + " J/(kg °C)", true), r.shc.type === "error");
         }
 
         function num(id) {
@@ -483,8 +565,6 @@
             return isNaN(v) ? null : v;
         }
 
-        // ---------- pengiraan ----------
-        // Bandul ringkas: T = t/N, g = 4π²L/T²
         function kiraPend() {
             const L = num("pL"), N = num("pN"), time = num("pTime");
             if (L === null || N === null || time === null) {
@@ -499,7 +579,6 @@
             renderAll();
         }
 
-        // Q = m × c × Δθ (jisim dalam gram) + kadar jika masa diberi
         function kiraQ() {
             const mode = document.querySelector('input[name="stateMode"]:checked').value;
             const m_g = parseFloat($("mass").value) || 0;
@@ -516,27 +595,20 @@
                 rateQ: hasTime ? Q / time : null,
                 rateT: hasTime ? deltaTheta / time : null
             };
+            
+            heatRecords[mode].push({ m: m_g, c, Ti, Tf, dT: deltaTheta, Q, rateQ: results.q.rateQ });
             renderAll();
+            switchTableMode(mode);
         }
 
-        // Purata aritmetik-geometri untuk tempoh tepat pada sebarang amplitud
-        function agm(a, b) {
-            for (let i = 0; i < 30 && Math.abs(a - b) > 1e-15; i++) {
-                const an = (a + b) / 2, bn = Math.sqrt(a * b);
-                a = an; b = bn;
-            }
-            return a;
-        }
-
-        // Panjang lengkok & sesaran separuh ayunan
         function kiraArc() {
             const L = num("aL"), deg = num("aTheta"), g = num("aG");
             if (L === null || deg === null || g === null) {
                 results.arc = { type: "error", msg: "fillAll" };
             } else if (L > 0 && g > 0 && deg > 0 && deg < 180) {
                 const rad = deg * Math.PI / 180;
-                const s = 2 * L * rad;                 // lengkok dari +θ₀ ke −θ₀
-                const d = 2 * L * Math.sin(rad);       // garis lurus antara dua hujung
+                const s = 2 * L * rad;
+                const d = 2 * L * Math.sin(rad);
                 const T0 = 2 * Math.PI * Math.sqrt(L / g);
                 const Ta = T0 / agm(1, Math.cos(rad / 2));
                 results.arc = {
@@ -550,7 +622,116 @@
             renderAll();
         }
 
-        // c = Q / (m × Δθ)
+        // ===================== SHM Records Table Functions (Logged via simSend) =====================
+        function renderSHMTable() {
+            const tableHead = $("shmTableHead");
+            const data = shmRecords.SimLog;
+            const t = TEXT[currentLang];
+
+            tableHead.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>#</th><th>L (m)</th><th>θ₀(°)</th><th>s (m)</th><th>d (m)</th><th>Ta (s)</th>
+                    </tr>
+                </thead>
+                <tbody id="shmTableBody">
+                    ${data.length === 0 ? `<tr><td colspan="6" style="color:#888;">${t.tblEmpty}</td></tr>` : 
+                      data.map((item, idx) => `
+                        <tr>
+                            <td>${idx + 1}</td><td>${fmt(item.L)}</td><td>${item.deg}°</td>
+                            <td>${fmt(item.s)}</td><td>${fmt(item.d)}</td><td><b>${fmt(item.Ta)}</b></td>
+                        </tr>
+                      `).join("")}
+                </tbody>
+            `;
+        }
+
+        function clearSHMRecords() {
+            shmRecords.SimLog = [];
+            renderSHMTable();
+        }
+
+        function exportSHMCSV() {
+            const data = shmRecords.SimLog;
+            if (!data || data.length === 0) return;
+
+            let csv = `#,Length L (m),Angle Theta (deg),Arc Length s (m),Displacement d (m),Period Ta (s)\n`;
+            data.forEach((item, idx) => {
+                csv += `${idx + 1},${item.L},${item.deg},${item.s},${item.d},${item.Ta}\n`;
+            });
+
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `SHM_Simulation_Log.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ===================== Heat Records Table Functions =====================
+        function switchTableMode(mode) {
+            activeTableMode = mode;
+            $("btnTabStatic").classList.toggle("active", mode === "Static");
+            $("btnTabOsc").classList.toggle("active", mode === "Oscillation");
+            renderHeatTable();
+        }
+
+        function renderHeatTable() {
+            const tbody = $("heatTableBody");
+            const data = heatRecords[activeTableMode];
+            const t = TEXT[currentLang];
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="color:#888;">${t.tblEmpty}</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map((item, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td>${fmt(item.m)}</td>
+                    <td>${fmt(item.c)}</td>
+                    <td>${fmt(item.Ti)}</td>
+                    <td>${fmt(item.Tf)}</td>
+                    <td>${fmt(item.dT)}</td>
+                    <td><b>${fmt(item.Q)}</b></td>
+                    <td>${item.rateQ !== null ? fmt(item.rateQ) : "-"}</td>
+                </tr>
+            `).join("");
+        }
+
+        function clearHeatRecords() {
+            heatRecords[activeTableMode] = [];
+            renderHeatTable();
+        }
+
+        function exportHeatCSV() {
+            const data = heatRecords[activeTableMode];
+            if (!data || data.length === 0) return;
+
+            let csv = `#,Mass (g),Specific Heat Capacity,Initial Temp (C),Final Temp (C),Delta Temp (C),Heat Q (J),Heat Rate (W)\n`;
+            data.forEach((item, idx) => {
+                csv += `${idx + 1},${item.m},${item.c},${item.Ti},${item.Tf},${item.dT},${item.Q},${item.rateQ !== null ? item.rateQ : ""}\n`;
+            });
+
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `Heat_Calculations_${activeTableMode}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function agm(a, b) {
+            for (let i = 0; i < 30 && Math.abs(a - b) > 1e-15; i++) {
+                const an = (a + b) / 2, bn = Math.sqrt(a * b);
+                a = an; b = bn;
+            }
+            return a;
+        }
+
         function kiraSHC() {
             const Q = num("shcQ"), m = num("shcMass"), dT = num("shcDT");
             if (Q === null || m === null || dT === null) {
@@ -563,30 +744,40 @@
             renderAll();
         }
 
-
-        // ===================== Simulator bandul langsung =====================
-        const sim = { L: 1.0, th0: 40 * Math.PI / 180, th: 40 * Math.PI / 180, w: 0, t: 0,
-                      run: true, drag: false, last: null, hist: [], trail: [], lastCross: null, measured: null, geom: null };
+        // ===================== Live Pendulum Simulator =====================
+        const sim = { 
+            L: 1.0, 
+            N: 10, 
+            th0: 40 * Math.PI / 180, 
+            th: 40 * Math.PI / 180, 
+            w: 0, 
+            t: 0,
+            run: true, 
+            drag: false, 
+            distHist: [], 
+            dispHist: [],
+            trail: []
+        };
         const D2R = Math.PI / 180;
 
-        function simReset() {
-            sim.th = sim.th0; sim.w = 0; sim.t = 0;
-            sim.hist = []; sim.trail = []; sim.lastCross = null; sim.measured = null;
+        function simRestart() {
+            sim.th = sim.th0; 
+            sim.w = 0; 
+            sim.t = 0;
+            sim.distHist = []; 
+            sim.dispHist = [];
+            sim.trail = [];
+            syncToManualCalculator();
         }
+
         function simT0() { return 2 * Math.PI * Math.sqrt(sim.L / G_REF); }
         function simTexact() { return simT0() / agm(1, Math.cos(sim.th0 / 2)); }
 
-        // Verlet: θ'' = -(g/L) sin θ  (bukan anggaran sudut kecil)
         function simStep(dt) {
-            const k = G_REF / sim.L, prev = sim.th, a = -k * Math.sin(sim.th);
+            const k = G_REF / sim.L, a = -k * Math.sin(sim.th);
             sim.th += sim.w * dt + 0.5 * a * dt * dt;
             sim.w += 0.5 * (a - k * Math.sin(sim.th)) * dt;
             sim.t += dt;
-            if (prev < 0 && sim.th >= 0 && sim.w > 0) {
-                const tc = sim.t - dt * sim.th / (sim.th - prev);
-                if (sim.lastCross !== null) sim.measured = tc - sim.lastCross;
-                sim.lastCross = tc;
-            }
         }
 
         function fitCanvas(c) {
@@ -603,176 +794,360 @@
             if (!W) return;
             const ctx = fitCanvas(c);
             ctx.clearRect(0, 0, W, H);
-            const px = W / 2, py = 24, sc = Math.min((H - 56) / 1.2, (W / 2 - 26) / 1.2), r = sim.L * sc;
+            
+            const px = W / 2, py = 24;
+            const maxL = Math.max(sim.L, 0.05);
+            const sc = Math.min((H - 50) / maxL, (W / 2 - 25) / maxL);
+            const r = sim.L * sc;
+
             const sx = Math.sin(sim.th0) * r, cy = Math.cos(sim.th0) * r;
             const bx = px + Math.sin(sim.th) * r, by = py + Math.cos(sim.th) * r;
 
-            // lengkok separuh ayunan (s) dan garis lurus (d)
             ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
             ctx.strokeStyle = "#7aa7e6"; ctx.beginPath();
             ctx.arc(px, py, r, Math.PI / 2 - sim.th0, Math.PI / 2 + sim.th0); ctx.stroke();
             ctx.strokeStyle = "#f0932b"; ctx.beginPath();
             ctx.moveTo(px - sx, py + cy); ctx.lineTo(px + sx, py + cy); ctx.stroke();
             ctx.setLineDash([]);
-            ctx.font = "12px Arial"; ctx.textAlign = "center";
+            ctx.font = "12px Arial";
             ctx.textAlign = "left"; ctx.fillStyle = "#c26a00"; ctx.fillText("d = " + fmt(2 * sim.L * Math.sin(sim.th0)) + " m", 8, 16);
             ctx.textAlign = "right"; ctx.fillStyle = "#3a6bb5"; ctx.fillText("s = " + fmt(2 * sim.L * sim.th0) + " m", W - 8, 16);
             ctx.textAlign = "center";
-            
 
-            // kesan gerakan
             sim.trail.forEach((p, i) => {
                 ctx.fillStyle = "rgba(0,123,255," + (i / sim.trail.length * 0.22) + ")";
                 ctx.beginPath(); ctx.arc(p[0], p[1], 11, 0, 6.3); ctx.fill();
             });
             if (sim.run && !sim.drag) { sim.trail.push([bx, by]); if (sim.trail.length > 14) sim.trail.shift(); }
 
-            // garis tegak, tali, sudut
             ctx.strokeStyle = "#9aa7b8"; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
             ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + r); ctx.stroke(); ctx.setLineDash([]);
             ctx.strokeStyle = "#d9534f"; ctx.lineWidth = 2; ctx.beginPath();
             const a0 = Math.PI / 2, a1 = Math.PI / 2 - sim.th;
             ctx.arc(px, py, 34, Math.min(a0, a1), Math.max(a0, a1)); ctx.stroke();
             ctx.fillStyle = "#d9534f";
-            ctx.fillText(Math.abs(sim.th / D2R).toFixed(0) + "°", px + (sim.th >= 0 ? -20 : 20), py + 56);
+            ctx.fillText(Math.abs(sim.th / D2R).toFixed(1) + "°", px + (sim.th >= 0 ? -20 : 20), py + 56);
             ctx.strokeStyle = "#2c3e50"; ctx.lineWidth = 2; ctx.beginPath();
             ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
 
-            // penyokong dan bob
             ctx.fillStyle = "#2c3e50"; ctx.fillRect(px - 32, py - 10, 64, 6);
             ctx.beginPath(); ctx.arc(px, py, 3.5, 0, 6.3); ctx.fill();
-            const g = ctx.createRadialGradient(bx - 4, by - 4, 2, bx, by, 14);
-            g.addColorStop(0, "#8fc8ff"); g.addColorStop(1, "#0062d6");
-            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by, 13, 0, 6.3); ctx.fill();
+            
+            const grad = ctx.createRadialGradient(bx - 4, by - 4, 2, bx, by, 13);
+            grad.addColorStop(0, "#8fc8ff"); grad.addColorStop(1, "#0062d6");
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(bx, by, 13, 0, 6.3); ctx.fill();
             if (sim.drag) {
-                ctx.strokeStyle = "rgba(0,123,255,.4)"; ctx.lineWidth = 4;
-                ctx.beginPath(); ctx.arc(bx, by, 19, 0, 6.3); ctx.stroke();
+                ctx.strokeStyle = "rgba(0,123,255,.4)";
+                ctx.beginPath(); ctx.arc(bx, by, 18, 0, 6.3); ctx.stroke();
             }
-            sim.geom = { px, py, bx, by };
         }
 
-        function drawGraph() {
-            const c = $("graphCanvas"), W = c.clientWidth, H = c.clientHeight;
+        function drawGraphT2() {
+            const c = $("graphCanvasT2"), W = c.clientWidth, H = c.clientHeight;
             if (!W) return;
-            const ctx = fitCanvas(c), t = TEXT[currentLang];
+            const ctx = fitCanvas(c);
             ctx.clearRect(0, 0, W, H);
-            const T0 = simT0(), win = 2.2 * T0, w0 = sim.t > win ? sim.t - win : 0;
-            const amp = sim.th0 * 1.2, mid = H / 2, ys = th => mid - th / amp * (mid - 16);
-            ctx.strokeStyle = "rgba(255,255,255,.18)"; ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(W, mid); ctx.stroke();
 
-            // anggaran sudut kecil: θ₀ cos(√(g/L) t)
-            ctx.strokeStyle = "#ffb74d"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]); ctx.beginPath();
-            const om = Math.sqrt(G_REF / sim.L);
-            for (let x = 0; x <= W; x += 3) {
-                const tt = w0 + x / W * win, y = ys(sim.th0 * Math.cos(om * tt));
-                x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-            }
-            ctx.stroke(); ctx.setLineDash([]);
+            const padLeft = 36, padBottom = 22, padTop = 12, padRight = 16;
+            const graphW = W - padLeft - padRight;
+            const graphH = H - padBottom - padTop;
 
-            // simulasi sebenar
-            ctx.strokeStyle = "#4dabff"; ctx.lineWidth = 2.2; ctx.beginPath();
-            sim.hist.forEach((p, i) => {
-                const x = (p[0] - w0) / win * W, y = ys(p[1]);
-                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-            });
+            const maxL = Math.max(2.5, sim.L * 1.3);
+            const exactT = simTexact();
+            const Tsq = exactT * exactT;
+            const maxTsq = Math.max(10, ((4 * Math.PI * Math.PI * maxL) / G_REF) * 1.1);
+
+            ctx.strokeStyle = "rgba(255,255,255,0.2)"; ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padLeft, H - padBottom); ctx.lineTo(W - padRight, H - padBottom);
+            ctx.moveTo(padLeft, H - padBottom); ctx.lineTo(padLeft, padTop);
             ctx.stroke();
 
-            ctx.font = "11px Arial"; ctx.textAlign = "left";
-            ctx.fillStyle = "#4dabff"; ctx.fillText("— " + t.legSim, 8, 14);
-            ctx.fillStyle = "#ffb74d"; ctx.fillText("- - " + t.legSmall, 8, 28);
+            ctx.fillStyle = "#89a"; ctx.font = "9px Arial"; ctx.textAlign = "center";
+            for (let l = 0; l <= maxL; l += 0.5) {
+                const x = padLeft + (l / maxL) * graphW;
+                ctx.fillText(l.toFixed(1), x, H - padBottom + 10);
+                ctx.fillRect(x, H - padBottom, 1, 3);
+            }
+            ctx.fillText("L (m)", W - padRight - 10, H - padBottom + 10);
+
+            ctx.textAlign = "right";
+            const stepTsq = maxTsq / 4;
+            for (let val = 0; val <= maxTsq; val += stepTsq) {
+                const y = (H - padBottom) - (val / maxTsq) * graphH;
+                ctx.fillText(val.toFixed(1), padLeft - 4, y + 3);
+                ctx.fillRect(padLeft - 3, y, 3, 1);
+            }
+            ctx.textAlign = "left";
+            ctx.fillText("T² (s²)", padLeft - 4, padTop - 2);
+
+            ctx.strokeStyle = "#00b4d8"; ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            for (let l = 0; l <= maxL; l += 0.05) {
+                const t2 = (4 * Math.PI * Math.PI * l) / G_REF;
+                const x = padLeft + (l / maxL) * graphW;
+                const y = (H - padBottom) - (t2 / maxTsq) * graphH;
+                if (l === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            const curX = padLeft + (sim.L / maxL) * graphW;
+            const curY = (H - padBottom) - (Tsq / maxTsq) * graphH;
+            ctx.fillStyle = "#ff5722";
+            ctx.beginPath(); ctx.arc(curX, curY, 4.5, 0, 6.3); ctx.fill();
         }
 
-        function updateSimStats() {
-            const T = simTexact(), T0 = simT0();
-            $("stA").textContent = (sim.th / D2R).toFixed(1) + "°";
-            $("stTm").textContent = sim.t.toFixed(2) + " s";
-            $("stM").textContent = sim.measured ? sim.measured.toFixed(3) + " s" : "–";
-            $("stT").textContent = T.toFixed(3) + " s";
-            $("stT0").textContent = T0.toFixed(3) + " s";
-            $("stD").textContent = "+" + ((T / T0 - 1) * 100).toFixed(2) + " %";
+        function drawGraphMotion() {
+            const c = $("graphCanvasMotion"), W = c.clientWidth, H = c.clientHeight;
+            if (!W) return;
+            const ctx = fitCanvas(c);
+            ctx.clearRect(0, 0, W, H);
+
+            const padLeft = 36, padBottom = 22, padTop = 14, padRight = 16;
+            const graphW = W - padLeft - padRight;
+            const graphH = H - padBottom - padTop;
+            const centerY = padTop + graphH / 2;
+
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(padLeft, centerY);
+            ctx.lineTo(W - padRight, centerY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.strokeStyle = "rgba(255,255,255,0.2)"; ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padLeft, H - padBottom); ctx.lineTo(W - padRight, H - padBottom);
+            ctx.moveTo(padLeft, padTop); ctx.lineTo(padLeft, H - padBottom);
+            ctx.stroke();
+
+            if (sim.distHist.length < 2) return;
+
+            const windowDuration = 5.0;
+            const maxT = sim.t;
+            const minT = Math.max(0, maxT - windowDuration);
+            const dt = Math.max(maxT - minT, 0.001);
+
+            const maxDist = sim.L * sim.th0 || 0.5;
+            const maxDisp = sim.L * Math.sin(sim.th0) || 0.5;
+            const maxVal = Math.max(maxDist, maxDisp, 0.1);
+            const scaleY = (graphH / 2 - 4) / maxVal;
+
+            ctx.fillStyle = "#89a"; ctx.font = "9px Arial"; ctx.textAlign = "center";
+            const numTicksX = 5;
+            for (let i = 0; i <= numTicksX; i++) {
+                const tVal = minT + (i / numTicksX) * dt;
+                const x = padLeft + (i / numTicksX) * graphW;
+                ctx.fillText(tVal.toFixed(1), x, H - padBottom + 10);
+                ctx.fillRect(x, H - padBottom, 1, 3);
+            }
+            ctx.textAlign = "right";
+            ctx.fillText("t (s)", W - padRight, H - padBottom + 10);
+
+            ctx.textAlign = "right";
+            ctx.fillText(`+${maxVal.toFixed(2)}`, padLeft - 4, padTop + 4);
+            ctx.fillText("0.00", padLeft - 4, centerY + 3);
+            ctx.fillText(`-${maxVal.toFixed(2)}`, padLeft - 4, H - padBottom + 3);
+
+            function drawPath(history, color) {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                let started = false;
+                history.forEach(p => {
+                    if (p[0] >= minT && p[0] <= maxT) {
+                        const x = padLeft + ((p[0] - minT) / dt) * graphW;
+                        const y = centerY - (p[1] * scaleY);
+                        if (!started) {
+                            ctx.moveTo(x, y);
+                            started = true;
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                });
+                ctx.stroke();
+            }
+
+            drawPath(sim.distHist, "#007BFF");
+            drawPath(sim.dispHist, "#ff9f43");
+
+            ctx.font = "9px Arial";
+            ctx.textAlign = "left";
+            ctx.fillStyle = "#007BFF";
+            ctx.fillText("■ s (dist)", padLeft + 4, padTop - 3);
+            ctx.fillStyle = "#ff9f43";
+            ctx.fillText("■ d (disp)", padLeft + 64, padTop - 3);
+        }
+
+        function syncToManualCalculator() {
+            const exactT = simTexact();
+            const totalTimeN = sim.N * exactT;
+
+            if ($("pL")) $("pL").value = sim.L;
+            if ($("pN")) $("pN").value = sim.N;
+            if ($("pTime")) $("pTime").value = totalTimeN.toFixed(3);
+
+            kiraPend();
+        }
+
+        function updateStats() {
+            $("stA").textContent = Math.abs(sim.th / D2R).toFixed(1) + "°";
+            
+            const exactT = simTexact();
+            const totalTimeN = sim.N * exactT;
+            const gCalc = 4 * Math.PI * Math.PI * sim.L / (exactT * exactT);
+
+            $("stM").textContent = sim.run ? fmt(totalTimeN) + " s" : "Paused";
+            $("stT").textContent = fmt(exactT) + " s";
+            $("stG").textContent = fmt(gCalc) + " m/s²";
+        }
+
+        function simToggle() {
+            sim.run = !sim.run;
+            updateSimText();
+        }
+
+        // --- Modified simSend to log data directly to SHM Table ---
+        function simSend() {
+            const L = sim.L;
+            const deg = parseFloat(Math.abs(sim.th0 / D2R).toFixed(1));
+            const g = G_REF;
+            const rad = deg * Math.PI / 180;
+            const s = 2 * L * rad;
+            const d = 2 * L * Math.sin(rad);
+            const T0 = 2 * Math.PI * Math.sqrt(L / g);
+            const Ta = T0 / agm(1, Math.cos(rad / 2));
+
+            // Push simulated values into the log table
+            shmRecords.SimLog.push({ L, deg, g, s, d, Ta });
+            renderSHMTable();
+
+            const inputL = $("aL");
+            const inputTheta = $("aTheta");
+            if (inputL) inputL.value = L;
+            if (inputTheta) inputTheta.value = deg;
+
+            showPanel("phys");
+            kiraArc();
+            const panelArc = $("panel-arc");
+            if (panelArc) {
+                panelArc.scrollIntoView({ behavior: "smooth" });
+            }
         }
 
         function updateSimText() {
-            const t = TEXT[currentLang];
-            $("simPlay").textContent = sim.run ? t.simPause : t.simPlay;
-            $("simLval").textContent = sim.L.toFixed(2);
-            $("simAval").textContent = Math.round(sim.th0 / D2R);
-            $("simLen").value = sim.L;
-            $("simAng").value = Math.round(sim.th0 / D2R);
+            $("simPlay").textContent = sim.run ? (TEXT[currentLang].simPause || "Pause") : (TEXT[currentLang].simPlay || "Play");
         }
 
-        function simToggle() { sim.run = !sim.run; updateSimText(); }
-        function simRestart() { simReset(); sim.run = true; updateSimText(); }
-        function simSend() {
-            $("aL").value = sim.L.toFixed(2);
-            $("aTheta").value = (sim.th0 / D2R).toFixed(1);
-            kiraArc();
-            showPanel("phys");
-            $("panel-arc").scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-
-        function simLoop(now) {
-            requestAnimationFrame(simLoop);
-            if (!$("panel-phys").classList.contains("active") || document.hidden) { sim.last = null; return; }
-            const dt = sim.last === null ? 0 : Math.min((now - sim.last) / 1000, 0.05);
-            sim.last = now;
-            if (sim.run && !sim.drag && dt > 0) {
-                const n = Math.ceil(dt / 0.004);
-                for (let i = 0; i < n; i++) simStep(dt / n);
-                sim.hist.push([sim.t, sim.th]);
-                const lim = sim.t - 2.2 * simT0() - 0.1;
-                while (sim.hist.length && sim.hist[0][0] < lim) sim.hist.shift();
+        function updateCustomLength(val) {
+            const parsed = parseFloat(val);
+            if (!isNaN(parsed) && parsed > 0) {
+                sim.L = parsed;
+                syncToManualCalculator();
             }
-            drawSim(); drawGraph(); updateSimStats();
+        }
+        function updateCustomN(val) {
+            const parsed = parseInt(val);
+            if (!isNaN(parsed) && parsed > 0) {
+                sim.N = parsed;
+                syncToManualCalculator();
+            }
         }
 
-        $("simLen").oninput = e => { sim.L = +e.target.value; simReset(); updateSimText(); };
-        $("simAng").oninput = e => { sim.th0 = +e.target.value * D2R; simReset(); updateSimText(); };
+        const simCanvas = $("simCanvas");
+        function getMouseAngle(e) {
+            const rect = simCanvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            if (clientX === undefined) return null;
+            const W = simCanvas.clientWidth, px = W / 2, py = 24;
+            const dx = clientX - rect.left - px, dy = clientY - rect.top - py;
+            return Math.atan2(dx, dy);
+        }
 
-        // seret bob dengan jari / tetikus
-        (function simPointer() {
-            const c = $("simCanvas");
-            const pos = e => { const b = c.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
-            function setFrom(x, y) {
-                const g = sim.geom; if (!g) return;
-                const a = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, Math.atan2(x - g.px, y - g.py)));
-                sim.th0 = Math.max(Math.abs(a), 1 * D2R);
-                simReset();
-                sim.th = a < 0 ? -sim.th0 : sim.th0;
-                updateSimText();
+        simCanvas.addEventListener("pointerdown", e => {
+            const th = getMouseAngle(e);
+            if (th !== null) {
+                sim.drag = true;
+                sim.th = Math.max(-Math.PI * 0.49, Math.min(Math.PI * 0.49, th));
+                sim.th0 = Math.abs(sim.th);
+                sim.w = 0;
+                simRestart();
+                $("simAng").value = Math.round(sim.th0 / D2R);
+                $("simAval").textContent = Math.round(sim.th0 / D2R);
+                syncToManualCalculator();
             }
-            c.addEventListener("pointerdown", e => {
-                const [x, y] = pos(e), g = sim.geom;
-                if (g && Math.hypot(x - g.bx, y - g.by) < 34) {
-                    sim.drag = true; c.setPointerCapture(e.pointerId); c.style.cursor = "grabbing"; setFrom(x, y);
-                }
-            });
-            c.addEventListener("pointermove", e => { if (sim.drag) { const [x, y] = pos(e); setFrom(x, y); } });
-            const end = () => { if (sim.drag) { sim.drag = false; sim.run = true; c.style.cursor = "grab"; updateSimText(); } };
-            c.addEventListener("pointerup", end);
-            c.addEventListener("pointercancel", end);
-        })();
-
-        simReset(); updateSimText();
-        requestAnimationFrame(simLoop);
-        $("tabbar").addEventListener("click", e => {
-            const b = e.target.closest(".tab");
-            if (b) showPanel(b.dataset.panel);
         });
 
-        (function init() {
-            let saved = "ms";
-            try { saved = localStorage.getItem("kalkulatorFizikLang") || "ms"; } catch (e) {}
-            setLang(saved);
-        })();
+        window.addEventListener("pointermove", e => {
+            if (!sim.drag) return;
+            const th = getMouseAngle(e);
+            if (th !== null) {
+                sim.th = Math.max(-Math.PI * 0.49, Math.min(Math.PI * 0.49, th));
+                sim.th0 = Math.abs(sim.th);
+                sim.w = 0;
+                $("simAng").value = Math.round(sim.th0 / D2R);
+                $("simAval").textContent = Math.round(sim.th0 / D2R);
+            }
+        });
 
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", function () {
-                navigator.serviceWorker.register("sw.js").catch(function () {});
-            });
+        window.addEventListener("pointerup", () => { 
+            sim.drag = false; 
+            syncToManualCalculator();
+        });
+
+        $("simAng").addEventListener("input", e => {
+            sim.th0 = parseFloat(e.target.value) * D2R;
+            if (!sim.drag) sim.th = sim.th0;
+            $("simAval").textContent = e.target.value;
+            syncToManualCalculator();
+        });
+
+        let lastTime = performance.now();
+        function loop(now) {
+            const dt = Math.min((now - lastTime) / 1000, 0.05);
+            lastTime = now;
+            if (sim.run && !sim.drag) {
+                const subSteps = 10;
+                const subDt = dt / subSteps;
+                for (let i = 0; i < subSteps; i++) {
+                    simStep(subDt);
+                }
+                const dist = sim.L * sim.th;
+                const disp = sim.L * Math.sin(sim.th);
+                
+                sim.distHist.push([sim.t, dist]);
+                sim.dispHist.push([sim.t, disp]);
+
+                const maxWindow = 6.0;
+                while (sim.distHist.length > 0 && sim.t - sim.distHist[0][0] > maxWindow) {
+                    sim.distHist.shift();
+                }
+                while (sim.dispHist.length > 0 && sim.t - sim.dispHist[0][0] > maxWindow) {
+                    sim.dispHist.shift();
+                }
+            }
+            drawSim();
+            drawGraphT2();
+            drawGraphMotion();
+            updateStats();
+            requestAnimationFrame(loop);
         }
-    </script>
 
+        document.querySelectorAll("#tabbar .tab").forEach(tab => {
+            tab.addEventListener("click", () => showPanel(tab.dataset.panel));
+        });
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedLang = localStorage.getItem("kalkulatorFizikLang") || "en";
+            setLang(savedLang);
+            syncToManualCalculator();
+            renderSHMTable();
+            requestAnimationFrame(loop);
+        });
+    </script>
 </body>
 </html>
