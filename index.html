@@ -107,6 +107,11 @@
         .sim-canvas, .graph-canvas { width: 100%; display: block; border-radius: 12px; }
         .sim-canvas { height: 180px; background: linear-gradient(#f9fcff, #e4eefc); cursor: grab; margin-bottom: 8px; touch-action: none; }
         .graph-canvas { height: 110px; background: #0f1b2d; margin-bottom: 8px; }
+        .fsb { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 6px; background: rgba(255,255,255,0.18); color: #fff; font-size: 17px; line-height: 30px; cursor: pointer; }
+        .gbox.fs { position: fixed; inset: 0; z-index: 9999; background: #0f1b2d; display: flex; flex-direction: column; padding: 10px; padding-top: calc(10px + env(safe-area-inset-top, 0px)); overflow: auto; }
+        .gbox.fs .cwrap { flex: 1; min-height: 160px; position: relative; }
+        .gbox.fs canvas { position: absolute; inset: 0; width: 100%; height: 100% !important; margin: 0; }
+        .gbox.fs .note { color: #cfe3ff; }
         .graph-label { font-size: 11px; color: #334; margin: 4px 0 2px; font-weight: bold; }
         .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 12px; margin-top: 8px; }
         .stat { background: #eef4ff; border-radius: 10px; padding: 8px 4px; text-align: center; }
@@ -187,10 +192,25 @@
                 <canvas id="simCanvas" class="sim-canvas"></canvas>
                 
                 <div class="graph-label" id="lblGraph1">Graph: T² vs Length (L)</div>
-                <canvas id="graphCanvasT2" class="graph-canvas"></canvas>
+                <div id="t2box" class="gbox">
+                    <div class="cwrap" style="position:relative;">
+                        <canvas id="graphCanvasT2" class="graph-canvas" style="height:170px;touch-action:manipulation;"></canvas>
+                        <button id="fsBtn" class="fsb" onclick="toggleFS('t2box', 'fsBtn')" aria-label="Full screen">⛶</button>
+                    </div>
+                    <div class="note" id="fitOut" style="margin-top:6px;"></div>
+                    <div class="btn-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                        <button class="mini" style="background:#16a34a" onclick="plotPend()" data-x="plot"></button>
+                        <button class="mini alt" onclick="clearPts()" data-x="clrFit"></button>
+                    </div>
+                </div>
                 
                 <div class="graph-label" id="lblGraph2">Graph: Distance (Blue) & Displacement (Orange) vs Time (t)</div>
-                <canvas id="graphCanvasMotion" class="graph-canvas"></canvas>
+                <div id="mvBox" class="gbox">
+                    <div class="cwrap" style="position:relative;">
+                        <canvas id="graphCanvasMotion" class="graph-canvas" style="height:150px;"></canvas>
+                        <button id="fsBtn2" class="fsb" onclick="toggleFS('mvBox', 'fsBtn2')" aria-label="Full screen">⛶</button>
+                    </div>
+                </div>
 
                 <div class="stats">
                     <div class="stat"><small data-t="stAngle"></small><b id="stA">-</b></div>
@@ -219,6 +239,7 @@
                     <button class="mini alt" onclick="simRestart()" data-t="simReset"></button>
                 </div>
                 <button class="calc" onclick="simSend()" data-t="simSend"></button>
+                <div class="note" id="angWarn" hidden style="margin-top:8px;color:#b45309;"></div>
             </div>
 
             <!-- 1. Simple Pendulum: g -->
@@ -364,6 +385,12 @@
                     <label for="shcDT" data-t="cDT"></label>
                     <input type="number" id="shcDT" step="any">
                 </div>
+                <div class="input-group">
+                    <label for="shcMatSearch" data-x="mat"></label>
+                    <input type="text" id="shcMatSearch" list="matList" autocomplete="off" oninput="matChanged()"><datalist id="matList"></datalist>
+                    <div class="note" id="matHint" style="margin-top:4px;"></div>
+                    <input type="number" id="shcRef" step="any" min="0" placeholder="c  J/(kg °C)" hidden style="margin-top:6px;">
+                </div>
                 <button class="calc" onclick="kiraSHC()" data-t="calc"></button>
                 <div class="result" id="out-shc" hidden></div>
             </div>
@@ -477,6 +504,163 @@
         const G_REF = 9.81;
         let currentLang = "en";
         const results = { pend: null, q: null, arc: null, shc: null };
+        const expPts = []; // plotted experiment points {L, N, time, T, T2, g}
+        const EXTRA = {
+            en: {
+                angWarn: "⚠ θ₀ = {a}° is above 15°. The small-angle formula T = 2π√(L/g) gives a period {e}% too low, so g from it is about {g}% too low. Use a smaller angle, or the exact period shown.",
+                fitNeed: "Calculate g with 3 or more different lengths to get a best-fit line, g ± error and R².",
+                clrFit: "Clear fit points", optCustom: "Custom (enter your own c)", mat: "Material (textbook c)", diff: "Difference from textbook",
+                lossNote: "Positive = above textbook. Heat lost to the surroundings usually makes c too high, so insulate the container."
+            },
+            ms: {
+                angWarn: "⚠ θ₀ = {a}° melebihi 15°. Formula sudut kecil T = 2π√(L/g) memberi tempoh {e}% terlalu rendah, jadi g daripadanya lebih kurang {g}% terlalu rendah. Guna sudut lebih kecil, atau tempoh tepat yang ditunjukkan.",
+                fitNeed: "Kira g dengan 3 panjang berbeza atau lebih untuk mendapat garis lurus terbaik, g ± ralat dan R².",
+                clrFit: "Kosongkan titik graf", optCustom: "Lain-lain (masukkan c sendiri)", mat: "Bahan (c buku teks)", diff: "Beza daripada buku teks",
+                lossNote: "Positif = melebihi buku teks. Haba hilang ke persekitaran biasanya menjadikan c terlalu tinggi, jadi yalitkan bekas."
+            }
+        };
+        Object.assign(EXTRA.en, {
+            plot: "Plot this result on graph", tapHint: "Press Calculate, then Plot to add points. Tap a point on the graph to see its details.",
+            del: "Delete point"
+        });
+        Object.assign(EXTRA.ms, {
+            plot: "Plot keputusan ini pada graf", tapHint: "Tekan Kira, kemudian Plot untuk tambah titik. Sentuh satu titik pada graf untuk lihat butirannya.",
+            del: "Padam titik"
+        });
+        let selPt = -1, t2map = null, lastPend = null;
+        function plotPend() {
+            const r = lastPend;
+            if (!r) return;
+            if (!expPts.some(p => p.L === r.L && p.T === r.T)) { expPts.push(r); selPt = expPts.length - 1; }
+        }
+        function delPt() { if (selPt >= 0) expPts.splice(selPt, 1); selPt = -1; }
+        function clearPts() { expPts.length = 0; selPt = -1; }
+        function t2xy(p) {
+            const m = t2map;
+            return [m.padLeft + (p.L / m.maxL) * m.graphW, (m.H - m.padBottom) - (p.T2 / m.maxTsq) * m.graphH];
+        }
+        function updateInfo() {
+            const el = $("fitOut"); if (!el) return;
+            let html;
+            if (selPt >= 0 && expPts[selPt]) {
+                const p = expPts[selPt];
+                html = `<b>#${selPt + 1}</b> L = ${p.L} m · N = ${p.N} · t = ${p.time} s<br>T = ${p.T.toFixed(3)} s · T² = ${p.T2.toFixed(3)} s²<br>g = ${p.g.toFixed(2)} m/s² (${((p.g / G_REF - 1) * 100).toFixed(1)}%) <button class="mini alt" onclick="delPt()">${EXTRA[currentLang].del}</button>`;
+            } else html = EXTRA[currentLang].tapHint;
+            if (el.dataset.v !== html) { el.dataset.v = html; el.innerHTML = html; }
+        }
+const MATS = [
+            ["Water", "Air", 4200],
+            ["Ice", "Ais", 2100],
+            ["Steam", "Wap", 2010],
+            ["Seawater", "Air laut", 3990],
+            ["Aluminium", "Aluminium", 900],
+            ["Copper", "Kuprum", 390],
+            ["Iron", "Besi", 450],
+            ["Steel (carbon)", "Keluli (karbon)", 490],
+            ["Stainless steel", "Keluli tahan karat", 500],
+            ["Cast iron", "Besi tuang", 460],
+            ["Brass", "Loyang", 380],
+            ["Bronze", "Gangsa", 380],
+            ["Zinc", "Zink", 390],
+            ["Lead", "Plumbum", 130],
+            ["Tin", "Timah", 227],
+            ["Nickel", "Nikel", 440],
+            ["Titanium", "Titanium", 520],
+            ["Magnesium", "Magnesium", 1020],
+            ["Silver", "Perak", 235],
+            ["Gold", "Emas", 129],
+            ["Tungsten", "Tungsten", 134],
+            ["Silicon", "Silikon", 710],
+            ["Graphite", "Grafit", 710],
+            ["Mercury", "Raksa", 140],
+            ["Concrete", "Konkrit", 880],
+            ["Brick", "Bata", 840],
+            ["Glass", "Kaca", 840],
+            ["Granite", "Granit", 790],
+            ["Marble", "Marmar", 880],
+            ["Sand", "Pasir", 830],
+            ["Asphalt", "Asfalt", 920],
+            ["Wood", "Kayu", 2000],
+            ["Rubber", "Getah", 1900],
+            ["Polyethylene (PE)", "Polietilena (PE)", 2300],
+            ["PVC", "PVC", 900],
+            ["Nylon", "Nilon", 1700],
+            ["PTFE (Teflon)", "PTFE (Teflon)", 1000],
+            ["Acrylic (PMMA)", "Akrilik (PMMA)", 1470],
+            ["Ethanol", "Etanol", 2440],
+            ["Ethylene glycol", "Etilena glikol", 2400],
+            ["Glycerol", "Gliserol", 2430],
+            ["Engine oil", "Minyak enjin", 2000],
+            ["Vegetable oil", "Minyak sayuran", 2000],
+            ["Kerosene", "Kerosin", 2010],
+            ["Gasoline (petrol)", "Petrol", 2220],
+            ["Diesel", "Diesel", 1800],
+            ["Air", "Udara", 1005],
+            ["Nitrogen", "Nitrogen", 1040],
+            ["Carbon dioxide", "Karbon dioksida", 840]
+        ]; // [English, Malay, c in J/(kg °C)] typical values near room temperature (gases at constant pressure)
+        Object.assign(EXTRA.en, { search: "Search material (e.g. steel, copper, oil)…", notFound: "Not in the list. Pick a suggestion, or choose Custom." });
+        Object.assign(EXTRA.ms, { search: "Cari bahan (cth. keluli, kuprum, minyak)…", notFound: "Tiada dalam senarai. Pilih cadangan, atau pilih Lain-lain." });
+        const isCustomMat = q => q.startsWith("custom") || q.startsWith("lain-lain");
+        function findMat(q) {
+            const ci = currentLang === "ms" ? 1 : 0;
+            for (const idx of [ci, 1 - ci]) {
+                const m = MATS.find(r => r[idx].toLowerCase() === q || `${r[idx]} (${r[2]})`.toLowerCase() === q);
+                if (m) return m;
+            }
+            return null;
+        }
+        function matInfo() {
+            const q = $("shcMatSearch").value.trim().toLowerCase();
+            if (!q) return 0;
+            if (isCustomMat(q)) return parseFloat($("shcRef").value) || 0;
+            const m = findMat(q);
+            return m ? m[2] : 0;
+        }
+        function matChanged() {
+            const q = $("shcMatSearch").value.trim().toLowerCase(), c = isCustomMat(q), m = c ? null : findMat(q);
+            $("shcRef").hidden = !c;
+            $("matHint").textContent = !q || c ? "" : m ? `c = ${m[2]} J/(kg °C)` : EXTRA[currentLang].notFound;
+        }
+        function buildMats() {
+            const dl = $("matList"), inp = $("shcMatSearch");
+            if (!dl || !inp) return;
+            const ms = currentLang === "ms";
+            dl.innerHTML = "";
+            [EXTRA[currentLang].optCustom, ...MATS.map(r => `${ms ? r[1] : r[0]} (${r[2]})`)].forEach(v => {
+                const o = document.createElement("option"); o.value = v; dl.appendChild(o);
+            });
+            inp.placeholder = EXTRA[currentLang].search;
+            matChanged();
+        }
+        function toggleFS(boxId, btnId) {
+            const on = $(boxId).classList.toggle("fs");
+            $(btnId).textContent = on ? "✕" : "⛶";
+            document.body.style.overflow = on ? "hidden" : "";
+        }
+        // Round tick step (1, 2, 5 x 10ⁿ) so the axis never gets crowded, whatever the length
+        function niceStep(range, target) {
+            const raw = range / target, pw = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / pw;
+            return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * pw;
+        }
+        const tickFmt = (v, step) => v.toFixed(step >= 1 ? 0 : step >= 0.1 ? 1 : 2);
+        function applyExtra() {
+            buildMats();
+            document.querySelectorAll("[data-x]").forEach(e => { e.textContent = EXTRA[currentLang][e.dataset.x]; });
+        }
+        // Least-squares line T² = mL + b, with g = 4π²/m, its uncertainty and R²
+        function fitExp() {
+            const n = expPts.length;
+            if (n < 2) return null;
+            const xb = expPts.reduce((a, p) => a + p.L, 0) / n, yb = expPts.reduce((a, p) => a + p.T2, 0) / n;
+            const Sxx = expPts.reduce((a, p) => a + (p.L - xb) ** 2, 0);
+            if (Sxx < 1e-9) return null;
+            const m = expPts.reduce((a, p) => a + (p.L - xb) * (p.T2 - yb), 0) / Sxx, b = yb - m * xb;
+            const SSres = expPts.reduce((a, p) => a + (p.T2 - m * p.L - b) ** 2, 0);
+            const SStot = expPts.reduce((a, p) => a + (p.T2 - yb) ** 2, 0);
+            const g = 4 * Math.PI * Math.PI / m;
+            return { m, b, g, n, dg: n >= 3 ? g * Math.sqrt(SSres / (n - 2) / Sxx) / m : null, r2: SStot > 0 ? 1 - SSres / SStot : 1 };
+        }
         const heatRecords = { Static: [], Oscillation: [] };
         const shmRecords = { SimLog: [] };
         let activeTableMode = "Static";
@@ -497,6 +681,7 @@
         function setLang(lang) {
             if (!TEXT[lang]) lang = "en";
             currentLang = lang;
+            applyExtra();
             const t = TEXT[lang];
             document.documentElement.lang = lang;
             document.title = t.pageTitle;
@@ -557,7 +742,8 @@
                 row(t.rHalf, fmt(r.arc.Ta / 2) + " s"), r.arc.type === "error");
 
             if (r.shc) setOut("shc", r.shc.type === "error" ? `<p>${t[r.shc.msg]}</p>` :
-                row(r.shc.c ? t.cRes : "", fmt(r.shc.c) + " J/(kg °C)", true), r.shc.type === "error");
+                (row(r.shc.c ? t.cRes : "", fmt(r.shc.c) + " J/(kg °C)", true) + (r.shc.ref ?
+                    row(EXTRA[currentLang].diff, ((r.shc.c / r.shc.ref - 1) * 100).toFixed(1) + " %") + `<p class="note">${EXTRA[currentLang].lossNote}</p>` : "")), r.shc.type === "error");
         }
 
         function num(id) {
@@ -573,6 +759,7 @@
                 const T = time / N;
                 const g = 4 * Math.PI * Math.PI * L / (T * T);
                 results.pend = { type: "ok", T, g, pct: Math.abs(g - G_REF) / G_REF * 100 };
+                lastPend = { L, N, time, T, T2: T * T, g };
             } else {
                 results.pend = { type: "error", msg: "pErr" };
             }
@@ -737,7 +924,7 @@
             if (Q === null || m === null || dT === null) {
                 results.shc = { type: "error", msg: "fillAll" };
             } else if (m > 0 && dT !== 0) {
-                results.shc = { type: "ok", c: Q / (m * dT) };
+                results.shc = { type: "ok", c: Q / (m * dT), ref: matInfo() };
             } else {
                 results.shc = { type: "error", msg: "cErr" };
             }
@@ -756,7 +943,10 @@
             drag: false, 
             distHist: [], 
             dispHist: [],
-            trail: []
+            trail: [],
+            thStart: 40 * Math.PI / 180,
+            path: 0,
+            done: false
         };
         const D2R = Math.PI / 180;
 
@@ -767,7 +957,20 @@
             sim.distHist = []; 
             sim.dispHist = [];
             sim.trail = [];
+            sim.thStart = sim.th;
+            sim.path = 0;
+            sim.done = false;
             syncToManualCalculator();
+        }
+
+        // Called when the bob is released: distance and displacement are measured from this point
+        function markRelease() {
+            sim.thStart = sim.th;
+            sim.path = 0;
+            sim.t = 0;
+            sim.done = false;
+            sim.distHist = [];
+            sim.dispHist = [];
         }
 
         function simT0() { return 2 * Math.PI * Math.sqrt(sim.L / G_REF); }
@@ -775,8 +978,10 @@
 
         function simStep(dt) {
             const k = G_REF / sim.L, a = -k * Math.sin(sim.th);
+            const thOld = sim.th;
             sim.th += sim.w * dt + 0.5 * a * dt * dt;
             sim.w += 0.5 * (a - k * Math.sin(sim.th)) * dt;
+            sim.path += sim.L * Math.abs(sim.th - thOld); // total distance travelled along the arc
             sim.t += dt;
         }
 
@@ -852,10 +1057,10 @@
             const graphW = W - padLeft - padRight;
             const graphH = H - padBottom - padTop;
 
-            const maxL = Math.max(2.5, sim.L * 1.3);
+            const maxL = Math.max(2.5, sim.L * 1.3, ...expPts.map(p => p.L * 1.1));
             const exactT = simTexact();
             const Tsq = exactT * exactT;
-            const maxTsq = Math.max(10, ((4 * Math.PI * Math.PI * maxL) / G_REF) * 1.1);
+            const maxTsq = Math.max(10, ((4 * Math.PI * Math.PI * maxL) / G_REF) * 1.1, ...expPts.map(p => p.T2 * 1.1));
 
             ctx.strokeStyle = "rgba(255,255,255,0.2)"; ctx.lineWidth = 1;
             ctx.beginPath();
@@ -864,18 +1069,19 @@
             ctx.stroke();
 
             ctx.fillStyle = "#89a"; ctx.font = "9px Arial"; ctx.textAlign = "center";
-            for (let l = 0; l <= maxL; l += 0.5) {
-                const x = padLeft + (l / maxL) * graphW;
-                ctx.fillText(l.toFixed(1), x, H - padBottom + 10);
+            const stepL = niceStep(maxL, 5);
+            for (let i = 0; i * stepL <= maxL + 1e-9; i++) {
+                const l = i * stepL, x = padLeft + (l / maxL) * graphW;
+                ctx.fillText(tickFmt(l, stepL), x, H - padBottom + 10);
                 ctx.fillRect(x, H - padBottom, 1, 3);
             }
             ctx.fillText("L (m)", W - padRight - 10, H - padBottom + 10);
 
             ctx.textAlign = "right";
-            const stepTsq = maxTsq / 4;
-            for (let val = 0; val <= maxTsq; val += stepTsq) {
-                const y = (H - padBottom) - (val / maxTsq) * graphH;
-                ctx.fillText(val.toFixed(1), padLeft - 4, y + 3);
+            const stepTsq = niceStep(maxTsq, 4);
+            for (let i = 0; i * stepTsq <= maxTsq + 1e-9; i++) {
+                const val = i * stepTsq, y = (H - padBottom) - (val / maxTsq) * graphH;
+                ctx.fillText(tickFmt(val, stepTsq), padLeft - 4, y + 3);
                 ctx.fillRect(padLeft - 3, y, 3, 1);
             }
             ctx.textAlign = "left";
@@ -883,11 +1089,11 @@
 
             ctx.strokeStyle = "#00b4d8"; ctx.lineWidth = 1.5;
             ctx.beginPath();
-            for (let l = 0; l <= maxL; l += 0.05) {
-                const t2 = (4 * Math.PI * Math.PI * l) / G_REF;
+            for (let i = 0; i <= 100; i++) {
+                const l = maxL * i / 100, t2 = (4 * Math.PI * Math.PI * l) / G_REF;
                 const x = padLeft + (l / maxL) * graphW;
                 const y = (H - padBottom) - (t2 / maxTsq) * graphH;
-                if (l === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.stroke();
 
@@ -895,6 +1101,38 @@
             const curY = (H - padBottom) - (Tsq / maxTsq) * graphH;
             ctx.fillStyle = "#ff5722";
             ctx.beginPath(); ctx.arc(curX, curY, 4.5, 0, 6.3); ctx.fill();
+
+            // Experiment points (green) and best-fit line (orange dashed)
+            const fit = fitExp();
+            if (fit) {
+                ctx.strokeStyle = "#ff9f43"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+                ctx.beginPath();
+                ctx.moveTo(padLeft, (H - padBottom) - (fit.b / maxTsq) * graphH);
+                ctx.lineTo(W - padRight, (H - padBottom) - ((fit.b + fit.m * maxL) / maxTsq) * graphH);
+                ctx.stroke(); ctx.setLineDash([]);
+            }
+            t2map = { padLeft, padBottom, H, graphW, graphH, maxL, maxTsq };
+            ctx.font = "9px Arial"; ctx.textAlign = "left";
+            const pr = $("t2box").classList.contains("fs") ? 5 : 3.5; // small points; bigger in full screen
+            expPts.forEach((pt, i) => {
+                const [x, y] = t2xy(pt);
+                ctx.fillStyle = "#2ecc71";
+                ctx.beginPath(); ctx.arc(x, y, pr, 0, 6.3); ctx.fill();
+                if (i === selPt) { ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, pr + 3, 0, 6.3); ctx.stroke(); }
+                ctx.fillStyle = "#fff"; ctx.fillText("#" + (i + 1), x + 7, y - 6);
+            });
+
+            // Fit note pops up inside the graph as soon as there are 2+ points
+            if (fit) {
+                const lines = [`T² = ${fit.m.toFixed(3)}L + ${fit.b.toFixed(3)}`,
+                    `g = ${fit.g.toFixed(2)}${fit.dg !== null ? " ± " + fit.dg.toFixed(2) : ""} m/s²`,
+                    `R² = ${fit.r2.toFixed(4)}  (n = ${fit.n})`];
+                ctx.fillStyle = "rgba(255,159,67,0.18)"; ctx.strokeStyle = "#ff9f43"; ctx.lineWidth = 1;
+                ctx.fillRect(padLeft + 6, padTop + 2, 132, 36); ctx.strokeRect(padLeft + 6, padTop + 2, 132, 36);
+                ctx.fillStyle = "#fff";
+                lines.forEach((ln, i) => ctx.fillText(ln, padLeft + 11, padTop + 14 + i * 11));
+            }
+            updateInfo();
         }
 
         function drawGraphMotion() {
@@ -903,74 +1141,61 @@
             const ctx = fitCanvas(c);
             ctx.clearRect(0, 0, W, H);
 
-            const padLeft = 36, padBottom = 22, padTop = 14, padRight = 16;
+            const padLeft = 40, padBottom = 24, padTop = 16, padRight = 16;
             const graphW = W - padLeft - padRight;
             const graphH = H - padBottom - padTop;
-            const centerY = padTop + graphH / 2;
+            const baseY = padTop + graphH;
 
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-            ctx.lineWidth = 1;
-            ctx.setLineDash([3, 3]);
-            ctx.beginPath();
-            ctx.moveTo(padLeft, centerY);
-            ctx.lineTo(W - padRight, centerY);
-            ctx.stroke();
-            ctx.setLineDash([]);
+            // One oscillation only: x-axis is 0 to T, y-axis is fixed from 0 to 4Lθ₀
+            const Ta = simTexact();
+            const sFull = 4 * sim.L * Math.max(Math.abs(sim.thStart), 0.001);
+            let dataMax = 0, tEnd = Ta;
+            [sim.distHist, sim.dispHist].forEach(h => h.forEach(p => { if (p[1] > dataMax) dataMax = p[1]; if (p[0] > tEnd) tEnd = p[0]; }));
+            const maxVal = Math.max(sFull, dataMax) * 1.05;
+            const X = t => padLeft + Math.min(t / tEnd, 1) * graphW;
+            const Y = v => baseY - (v / maxVal) * graphH;
 
             ctx.strokeStyle = "rgba(255,255,255,0.2)"; ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(padLeft, H - padBottom); ctx.lineTo(W - padRight, H - padBottom);
-            ctx.moveTo(padLeft, padTop); ctx.lineTo(padLeft, H - padBottom);
+            ctx.moveTo(padLeft, baseY); ctx.lineTo(W - padRight, baseY);
+            ctx.moveTo(padLeft, padTop); ctx.lineTo(padLeft, baseY);
             ctx.stroke();
 
-            if (sim.distHist.length < 2) return;
-
-            const windowDuration = 5.0;
-            const maxT = sim.t;
-            const minT = Math.max(0, maxT - windowDuration);
-            const dt = Math.max(maxT - minT, 0.001);
-
-            const maxDist = sim.L * sim.th0 || 0.5;
-            const maxDisp = sim.L * Math.sin(sim.th0) || 0.5;
-            const maxVal = Math.max(maxDist, maxDisp, 0.1);
-            const scaleY = (graphH / 2 - 4) / maxVal;
+            // Guide lines at T/2 and at s = 2Lθ₀ and 4Lθ₀
+            ctx.strokeStyle = "rgba(255,255,255,0.15)";
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(X(Ta / 2), padTop); ctx.lineTo(X(Ta / 2), baseY);
+            ctx.moveTo(padLeft, Y(sFull / 2)); ctx.lineTo(W - padRight, Y(sFull / 2));
+            ctx.moveTo(padLeft, Y(sFull)); ctx.lineTo(W - padRight, Y(sFull));
+            ctx.stroke();
+            ctx.setLineDash([]);
 
             ctx.fillStyle = "#89a"; ctx.font = "9px Arial"; ctx.textAlign = "center";
-            const numTicksX = 5;
-            for (let i = 0; i <= numTicksX; i++) {
-                const tVal = minT + (i / numTicksX) * dt;
-                const x = padLeft + (i / numTicksX) * graphW;
-                ctx.fillText(tVal.toFixed(1), x, H - padBottom + 10);
-                ctx.fillRect(x, H - padBottom, 1, 3);
+            for (let i = 0; i <= 4; i++) {
+                const x = X(tEnd * i / 4);
+                ctx.fillText((tEnd * i / 4).toFixed(2), x, H - padBottom + 10);
+                ctx.fillRect(x, baseY, 1, 3);
             }
             ctx.textAlign = "right";
-            ctx.fillText("t (s)", W - padRight, H - padBottom + 10);
-
-            ctx.textAlign = "right";
-            ctx.fillText(`+${maxVal.toFixed(2)}`, padLeft - 4, padTop + 4);
-            ctx.fillText("0.00", padLeft - 4, centerY + 3);
-            ctx.fillText(`-${maxVal.toFixed(2)}`, padLeft - 4, H - padBottom + 3);
+            ctx.fillText("t (s)", W - padRight, H - padBottom + 20);
+            ctx.fillText("0", padLeft - 4, baseY + 3);
+            ctx.fillText(fmt(sFull / 2), padLeft - 4, Y(sFull / 2) + 3);
+            ctx.fillText(fmt(sFull), padLeft - 4, Y(sFull) + 3);
 
             function drawPath(history, color) {
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 1.8;
+                if (history.length < 2) return;
+                ctx.strokeStyle = color; ctx.lineWidth = 1.8;
                 ctx.beginPath();
-                let started = false;
-                history.forEach(p => {
-                    if (p[0] >= minT && p[0] <= maxT) {
-                        const x = padLeft + ((p[0] - minT) / dt) * graphW;
-                        const y = centerY - (p[1] * scaleY);
-                        if (!started) {
-                            ctx.moveTo(x, y);
-                            started = true;
-                        } else {
-                            ctx.lineTo(x, y);
-                        }
-                    }
+                history.forEach((p, i) => {
+                    if (i === 0) ctx.moveTo(X(p[0]), Y(p[1]));
+                    else ctx.lineTo(X(p[0]), Y(p[1]));
                 });
                 ctx.stroke();
+                const last = history[history.length - 1];
+                ctx.fillStyle = color;
+                ctx.beginPath(); ctx.arc(X(last[0]), Y(last[1]), 3.5, 0, 6.3); ctx.fill();
             }
-
             drawPath(sim.distHist, "#007BFF");
             drawPath(sim.dispHist, "#ff9f43");
 
@@ -980,6 +1205,9 @@
             ctx.fillText("■ s (dist)", padLeft + 4, padTop - 3);
             ctx.fillStyle = "#ff9f43";
             ctx.fillText("■ d (disp)", padLeft + 64, padTop - 3);
+            ctx.fillStyle = "#89a";
+            ctx.textAlign = "right";
+            ctx.fillText("T = " + fmt(Ta) + " s", W - padRight, padTop - 3);
         }
 
         function syncToManualCalculator() {
@@ -1003,6 +1231,17 @@
             $("stM").textContent = sim.run ? fmt(totalTimeN) + " s" : "Paused";
             $("stT").textContent = fmt(exactT) + " s";
             $("stG").textContent = fmt(gCalc) + " m/s²";
+
+            const warnEl = $("angWarn");
+            if (warnEl) {
+                const deg = sim.th0 / D2R;
+                let msg = "";
+                if (deg > 15) {
+                    const e = exactT / simT0() - 1;
+                    msg = EXTRA[currentLang].angWarn.replace("{a}", deg.toFixed(0)).replace("{e}", (e * 100).toFixed(1)).replace("{g}", ((1 - 1 / ((1 + e) * (1 + e))) * 100).toFixed(0));
+                }
+                if (warnEl.dataset.v !== msg) { warnEl.dataset.v = msg; warnEl.textContent = msg; warnEl.hidden = !msg; }
+            }
         }
 
         function simToggle() {
@@ -1046,6 +1285,7 @@
             const parsed = parseFloat(val);
             if (!isNaN(parsed) && parsed > 0) {
                 sim.L = parsed;
+                simRestart(); // new length = new motion, so distance restarts from 0
                 syncToManualCalculator();
             }
         }
@@ -1094,14 +1334,14 @@
             }
         });
 
-        window.addEventListener("pointerup", () => { 
-            sim.drag = false; 
+        window.addEventListener("pointerup", () => {
+            if (sim.drag) { sim.drag = false; markRelease(); } // only a real drag-and-release restarts distance/displacement
             syncToManualCalculator();
         });
 
         $("simAng").addEventListener("input", e => {
             sim.th0 = parseFloat(e.target.value) * D2R;
-            if (!sim.drag) sim.th = sim.th0;
+            if (!sim.drag) { sim.th = sim.th0; sim.w = 0; markRelease(); }
             $("simAval").textContent = e.target.value;
             syncToManualCalculator();
         });
@@ -1113,21 +1353,16 @@
             if (sim.run && !sim.drag) {
                 const subSteps = 10;
                 const subDt = dt / subSteps;
+                const Ta = simTexact();
                 for (let i = 0; i < subSteps; i++) {
                     simStep(subDt);
-                }
-                const dist = sim.L * sim.th;
-                const disp = sim.L * Math.sin(sim.th);
-                
-                sim.distHist.push([sim.t, dist]);
-                sim.dispHist.push([sim.t, disp]);
-
-                const maxWindow = 6.0;
-                while (sim.distHist.length > 0 && sim.t - sim.distHist[0][0] > maxWindow) {
-                    sim.distHist.shift();
-                }
-                while (sim.dispHist.length > 0 && sim.t - sim.dispHist[0][0] > maxWindow) {
-                    sim.dispHist.shift();
+                    // Record only ONE full oscillation (t = 0 to T), then the graph stays fixed
+                    if (!sim.done) {
+                        // distance = total arc path; displacement = straight-line gap from release point
+                        sim.distHist.push([sim.t, sim.path]);
+                        sim.dispHist.push([sim.t, 2 * sim.L * Math.sin(Math.abs(sim.th - sim.thStart) / 2)]);
+                        if (sim.t >= Ta) sim.done = true;
+                    }
                 }
             }
             drawSim();
@@ -1146,6 +1381,15 @@
             setLang(savedLang);
             syncToManualCalculator();
             renderSHMTable();
+            applyExtra();
+            $("graphCanvasT2").addEventListener("pointerdown", e => {
+                if (!t2map) return;
+                const r = e.currentTarget.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+                let best = -1, bd = 22;
+                expPts.forEach((p, i) => { const [px, py] = t2xy(p); const d = Math.hypot(x - px, y - py); if (d < bd) { bd = d; best = i; } });
+                selPt = best;
+            });
+            if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
             requestAnimationFrame(loop);
         });
     </script>
