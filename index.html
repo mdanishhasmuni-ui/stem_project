@@ -163,6 +163,77 @@
             #panel-sim { grid-row: 1 / span 2; }
             #panel-heat.active { grid-template-columns: 1fr 1fr; }
         }
+        .r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+        .r2 .input-group { min-width: 0; }
+        #panel-app select { width: 100%; padding: 12px; border: 1px solid #cfd8e3; border-radius: 10px; font-size: 16px; background: #fff; }
+
+        /* ---- GQALC 3D engineering simulation workspace ---- */
+        #panel-app.active { display:block; }
+        .sim-intro { margin: 4px 0 16px; }
+        .eyebrow { color:#64748b; font-size:10px; letter-spacing:1.5px; font-weight:800; }
+        .sim-intro h3,.control-head h3,.results-title h3 { margin:5px 0; color:#10213a; font-size:20px; }
+        .sim-intro .note { margin:5px 0 0; }
+        .module-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; margin-bottom:14px; }
+        .module-btn { text-align:left; min-height:88px; border:1px solid #dbe4ef; border-radius:12px; background:#fff; padding:12px; cursor:pointer; color:#24364b; }
+        .module-btn span { display:block; color:#94a3b8; font-size:10px; font-weight:800; margin-bottom:7px; }
+        .module-btn b { display:block; font-size:13px; line-height:1.25; }
+        .module-btn small { display:block; color:#718096; margin-top:6px; font-size:10px; line-height:1.3; }
+        .module-btn.active { border-color:#1684e8; background:#eff7ff; box-shadow:inset 0 0 0 1px #1684e8; }
+        .sim-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(310px,.9fr); gap:14px; align-items:start; }
+        .sim-view-card,.control-card,.results-card,.reference-card { border:1px solid #dce5ef; border-radius:15px; background:#fff; overflow:hidden; }
+        .sim-view-head,.view-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 14px; }
+        .sim-view-head { border-bottom:1px solid #edf1f6; color:#26364a; font-size:11px; }
+        .sim-view-head>div:first-child { display:flex; align-items:center; gap:8px; }
+        .live-dot { width:7px; height:7px; border-radius:50%; background:#16a36a; box-shadow:0 0 0 4px #dcfce7; }
+        .view-actions { display:flex; gap:6px; }
+        .view-actions button { border:1px solid #d7e0ea; border-radius:7px; background:#fff; padding:6px 9px; font-size:11px; color:#334155; cursor:pointer; }
+        #threeStage { width:100%; height:380px; min-height:300px; background:radial-gradient(ellipse at 50% 45%,#203a5b 0%,#101d30 70%); touch-action:none; }
+        #threeStage canvas { display:block; width:100%; height:100%; }
+        .view-foot { background:#f8fafc; color:#64748b; font-size:10px; }
+        #simStatus { font-weight:800; color:#16845d; letter-spacing:.5px; }
+        .fallback-3d { padding:18px; color:#92400e; background:#fffbeb; font-size:13px; }
+        .control-card { padding:15px; }
+        .control-head h3 { font-size:17px; }
+        .level-switch { display:flex; gap:5px; background:#f1f5f9; border-radius:9px; padding:4px; margin:12px 0; }
+        .level-btn { flex:1; padding:8px; border:0; border-radius:7px; background:transparent; color:#64748b; font-size:12px; font-weight:700; cursor:pointer; }
+        .level-btn.active { background:#fff; color:#075eb2; box-shadow:0 1px 4px #cbd5e1; }
+        .preset-row { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
+        .preset-row label { margin:0; font-size:11px; }
+        .preset-row select { max-width:55%; padding:8px; font-size:12px; }
+        .param-row { padding:9px 0; border-top:1px solid #eef2f6; }
+        .param-top { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+        .param-top label { margin:0; font-size:11px; color:#334155; }
+        .param-value { display:flex; align-items:center; gap:5px; }
+        .param-value input { width:100px; padding:6px 7px; font-size:12px; border:1px solid #cbd5e1; border-radius:7px; text-align:right; }
+        .param-value span { min-width:32px; color:#64748b; font-size:10px; }
+        .param-row input[type=range] { width:100%; margin:9px 0 0; accent-color:#0878d1; }
+        .range-ends { display:flex; justify-content:space-between; color:#94a3b8; font-size:9px; }
+        .control-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:14px; }
+        .control-actions button { padding:10px 7px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; }
+        .primary-action { border:0; background:#0878d1; color:#fff; }
+        .secondary-action { border:1px solid #d4dee9; background:#fff; color:#475569; }
+        .results-card { margin-top:14px; padding:15px; }
+        .results-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+        .results-title h3 { font-size:17px; }
+        .unit-tag { padding:5px 8px; border-radius:6px; background:#eff6ff; color:#1d65a5; font-size:9px; font-weight:800; }
+        .result-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+        .metric { border:1px solid #e4ebf3; border-radius:10px; padding:10px; background:#fbfdff; min-width:0; }
+        .metric span { display:block; color:#64748b; font-size:10px; line-height:1.3; }
+        .metric b { display:block; margin-top:5px; color:#122b48; font-size:17px; overflow-wrap:anywhere; }
+        .metric small { color:#94a3b8; font-size:9px; }
+        .simulation-warning { margin-top:10px; padding:10px 12px; border-radius:8px; background:#eff6ff; color:#1e4e79; font-size:11px; line-height:1.5; }
+        .simulation-warning.warn { background:#fff7ed; color:#9a3412; }
+        .simulation-warning.danger { background:#fef2f2; color:#991b1b; }
+        .model-note { margin:10px 0 0; color:#64748b; font-size:10px; line-height:1.5; }
+        .reference-card { margin-top:14px; padding:13px 15px; }
+        .reference-card summary { cursor:pointer; color:#26364a; font-size:12px; font-weight:800; }
+        .reference-content { color:#64748b; font-size:11px; line-height:1.6; }
+        .reference-content a { color:#086bb8; }
+        .reference-content li { margin:5px 0; }
+        .disclaimer { padding:9px; background:#fff7ed; color:#92400e; border-radius:8px; }
+        @media(max-width:760px) { .module-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .sim-layout { grid-template-columns:1fr; } #threeStage { height:310px; } .result-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media(min-width:900px) { #panel-app.active { display:block; } }
+
     </style>
 </head>
 <body>
@@ -179,8 +250,9 @@
         <h2 data-t="title"></h2>
 
         <div class="tabbar" id="tabbar" role="tablist">
-            <button class="tab active" data-panel="phys" data-t="tabPhys"></button>
+            <button class="tab active" data-panel="phys" data-t="tabPhys" aria-selected="true"></button>
             <button class="tab" data-panel="heat" data-t="tabHeat"></button>
+            <button class="tab" data-panel="app" data-t="tabApp"></button>
         </div>
 
         <div class="panel active" id="panel-phys">
@@ -302,6 +374,53 @@
             </div>
         </div>
 
+        <div class="panel" id="panel-app">
+            <div class="sim-intro">
+                <div class="eyebrow" data-3d="platform">ENGINEERING SIMULATION PLATFORM</div>
+                <h3 data-3d="choose">Choose a simulation</h3>
+                <p class="note" data-3d="intro">Explore vibration systems in 3D. Change the operating parameters and observe the physical response.</p>
+            </div>
+            <div class="module-grid" role="group" aria-label="Simulation modules">
+                <button class="module-btn active" data-module="dryer" onclick="selectModule('dryer')"><span>01</span><b data-3d="dryer">Industrial vibrating dryer</b><small data-3d="dryerSub">Vibrating tray · particle motion</small></button>
+                <button class="module-btn" data-module="building" onclick="selectModule('building')"><span>02</span><b data-3d="building">Building vibration</b><small data-3d="buildingSub">Base excitation · damping</small></button>
+                <button class="module-btn" data-module="spring" onclick="selectModule('spring')"><span>03</span><b data-3d="spring">Spring–mass resonance</b><small data-3d="springSub">Forced oscillation · resonance</small></button>
+                <button class="module-btn" data-module="engine" onclick="selectModule('engine')"><span>04</span><b data-3d="engine">Engine / rotating machinery</b><small data-3d="engineSub">Rotor imbalance · bearing vibration</small></button>
+            </div>
+            <div class="sim-layout">
+                <section class="sim-view-card">
+                    <div class="sim-view-head"><div><span class="live-dot"></span><b data-3d="view3d">LIVE 3D VIEW</b></div><div class="view-actions"><button type="button" onclick="resetCamera()" data-3d="resetView">Reset view</button><button type="button" onclick="toggleSimulation()" id="runBtn">Pause</button></div></div>
+                    <div id="threeStage" aria-label="Interactive 3D engineering simulation"></div>
+                    <div class="view-foot"><span data-3d="drag">Drag to rotate · scroll to zoom</span><span id="simStatus">SIMULATION RUNNING</span></div>
+                    <div class="fallback-3d" id="threeFallback" hidden>3D engine could not load. Connect to the internet and reload this page to load Three.js.</div>
+                </section>
+                <section class="control-card">
+                    <div class="control-head"><div><span class="eyebrow" data-3d="controls">CONTROL PANEL</span><h3 id="moduleTitle">Industrial vibrating dryer</h3></div></div>
+                    <div class="level-switch" aria-label="Combined parameter level"><span class="level-btn active" style="display:block;cursor:default;">Foundation &amp; Industrial</span></div>
+                    <div class="preset-row"><label for="presetSelect" data-3d="preset">Parameter preset</label><select id="presetSelect" onchange="applyPreset(this.value)"><option value="normal">Normal operation</option><option value="low">Low range</option><option value="high">High range</option><option value="near">Near resonance</option></select></div>
+                    <div id="parameterControls"></div>
+                    <div class="control-actions"><button class="primary-action" onclick="recalculate()" data-3d="update">Update simulation</button><button class="secondary-action" onclick="resetParameters()" data-3d="defaults">Restore defaults</button></div>
+                </section>
+            </div>
+            <div class="results-card">
+                <div class="results-title"><div><span class="eyebrow" data-3d="results">LIVE RESULTS</span><h3 data-3d="calculated">Calculated engineering values</h3></div><span class="unit-tag" data-3d="si">SI UNITS</span></div>
+                <div id="simulationResults" class="result-grid"></div>
+                <div id="simulationWarnings" class="simulation-warning" role="status"></div>
+                <p class="model-note" id="modelNote"></p>
+            </div>
+            <details class="reference-card"><summary data-3d="references">References, assumptions and limitations</summary>
+                <div class="reference-content">
+                    <p data-3d="refIntro">The formulas are simplified single-degree-of-freedom teaching models. Parameter ranges are adjustable demonstration ranges, not certified machine or structural design limits.</p>
+                    <ul>
+                        <li><a href="https://www.iso.org/standard/89921.html" target="_blank" rel="noopener">ISO 20816-1:2026</a> — general principles for measuring and evaluating machine vibration.</li>
+                        <li><a href="https://www.iso.org/standard/37070.html" target="_blank" rel="noopener">ISO 10137:2007</a> — vibration serviceability of buildings and walkways.</li>
+                        <li><a href="https://www.skf.com/binaries/pub12/Images/0901d196802179ea-JM02001_Introduction_Guide_to_Vibration_Monitoring_2017_tcm_12-312756.pdf" target="_blank" rel="noopener">SKF Introduction Guide to Vibration Monitoring</a> — vibration quantities and condition-monitoring concepts.</li>
+                        <li><a href="https://resource.iyp.tw/static.iyp.tw/24517/files/54e2ee1059e2d.pdf" target="_blank" rel="noopener">Bosch Rexroth technical information: Bellow actuators</a> — industrial vibration-isolation applications and the need to check force/stroke data for the selected component.</li>
+                        <li><a href="https://www.weg.net/catalog/weg/CI/en/Electric-Motors/Low-Voltage-IEC-Motors/Three-Phase/W22-/W22-IE2-2-2-kW-4P-L90L-3Ph-220-230-240-380-400-415-460-V-50-Hz-IC411---TEFC---B3T/p/11681338" target="_blank" rel="noopener">WEG W22 motor product data</a> — example of a 4-pole, 50 Hz motor with 1500 rpm synchronous speed (actual rated speed is slightly lower).</li>
+                    </ul>
+                    <p class="disclaimer" data-3d="disclaimer">This application is for learning and preliminary exploration only. It is not a substitute for site measurements, manufacturer data for the exact machine, a qualified engineer, or the full requirements of applicable standards. Do not use its warning colours as ISO acceptance zones.</p>
+                </div>
+            </details>
+        </div>
         <div class="panel" id="panel-heat">
             <!-- 2. Heat Q = mcΔθ + rate -->
             <div class="section" id="panel-q">
@@ -397,6 +516,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
     <script>
         const TEXT = {
             ms: {
@@ -408,7 +528,7 @@
                 optShc: "Muatan haba tentu (c)",
                 calc: "Kira Sekarang",
                 optSim: "Simulator bandul langsung (interaktif)",
-                tabPhys: "Fizik & Matematik", tabHeat: "Haba",
+                tabPhys: "Fizik & Matematik", tabHeat: "Haba", tabApp: "Aplikasi",
                 simTip: "Seret bob untuk menukar sudut. Data auto-sync ke kalkulator manual di sebelah.",
                 simL: "Panjang, L (m):", simN: "Bilangan ayunan, N:", simA: "Sudut lancaran, θ₀:", simReset: "Ulang", simSend: "Hantar ke kalkulator lengkok",
                 simPlay: "Main", simPause: "Jeda",
@@ -458,7 +578,7 @@
                 optShc: "Specific heat capacity (c)",
                 calc: "Calculate Now",
                 optSim: "Live pendulum simulator (interactive)",
-                tabPhys: "Physics & Math", tabHeat: "Heat",
+                tabPhys: "Physics & Math", tabHeat: "Heat", tabApp: "Applications",
                 simTip: "Drag bob to change angle. Data auto-syncs to the manual calculator on the right.",
                 simL: "Length, L (m):", simN: "Oscillations, N:", simA: "Launch angle, θ₀:", simReset: "Restart", simSend: "Send to arc calculator",
                 simPlay: "Play", simPause: "Pause",
@@ -669,19 +789,29 @@ const MATS = [
 
         function showPanel(name) {
             const was = $("panel-" + name).classList.contains("active");
-            ["phys", "heat"].forEach(n => $("panel-" + n).classList.toggle("active", n === name));
+            ["phys", "heat", "app"].forEach(n => $("panel-" + n).classList.toggle("active", n === name));
             document.querySelectorAll("#tabbar .tab").forEach(b => {
                 const on = b.dataset.panel === name;
                 b.classList.toggle("active", on);
                 b.setAttribute("aria-selected", on);
             });
             if (!was) window.scrollTo(0, 0);
+            // The 3D panel is initially hidden. Initialise only after it becomes visible.
+            if (name === "app") {
+                requestAnimationFrame(() => {
+                    if (!threeRenderer) initThree();
+                    else resizeThree();
+                    // A second measurement handles mobile browsers that finish layout one frame later.
+                    requestAnimationFrame(resizeThree);
+                });
+            }
         }
 
         function setLang(lang) {
             if (!TEXT[lang]) lang = "en";
             currentLang = lang;
             applyExtra();
+            applyApp();
             const t = TEXT[lang];
             document.documentElement.lang = lang;
             document.title = t.pageTitle;
@@ -1372,6 +1502,128 @@ const MATS = [
             requestAnimationFrame(loop);
         }
 
+// ===== GQALC 3D engineering simulation platform =====
+        const SIM_TEXT = {
+          en:{platform:"ENGINEERING SIMULATION PLATFORM",choose:"Choose a simulation",intro:"Explore vibration systems in 3D. Change the operating parameters and observe the physical response.",dryer:"Industrial vibrating dryer",dryerSub:"Vibrating tray · particle motion",building:"Building vibration",buildingSub:"Base excitation · damping",spring:"Spring–mass resonance",springSub:"Forced oscillation · resonance",engine:"Engine / rotating machinery",engineSub:"Rotor imbalance · bearing vibration",view3d:"LIVE 3D VIEW",resetView:"Reset view",drag:"Drag to rotate · scroll to zoom",controls:"CONTROL PANEL",foundation:"Foundation",industrial:"Industrial",preset:"Parameter preset",update:"Update simulation",defaults:"Restore defaults",results:"LIVE RESULTS",calculated:"Calculated engineering values",si:"SI UNITS",references:"References, assumptions and limitations",refIntro:"The formulas are simplified single-degree-of-freedom teaching models. Parameter ranges are adjustable demonstration ranges, not certified machine or structural design limits.",disclaimer:"For learning and preliminary exploration only. Not a substitute for site measurements, exact manufacturer data, a qualified engineer, or applicable standards. Warning colours are not ISO acceptance zones.",normal:"Normal operation",low:"Low range",high:"High range",near:"Near resonance",running:"SIMULATION RUNNING",paused:"SIMULATION PAUSED",threeFail:"3D engine could not load. Connect to the internet and reload this page to load Three.js.",mass:"Moving mass",stiffness:"Support stiffness",damping:"Damping ratio",frequency:"Excitation frequency",amplitude:"Amplitude",force:"Excitation force",rpm:"Rotational speed",ecc:"Eccentricity",trayMass:"Tray mass",materialMass:"Material mass",specificHeat:"Specific heat capacity",tempStart:"Initial temperature",tempEnd:"Target temperature",heater:"Heater power",efficiency:"Thermal efficiency",groundAmp:"Ground amplitude",duration:"Shaking duration",rotorMass:"Rotor mass",support:"Bearing/support stiffness",run:"Update simulation",range:"Range",warningNear:"Operating frequency is close to the estimated natural frequency. Resonance can amplify vibration. Verify the real system and avoid unsafe operation.",warningHigh:"The calculated response is high for this simplified model. Check clearances, fatigue, supports, fasteners and manufacturer limits before any real-world use.",warningOk:"No resonance warning from this simplified model. This does not confirm that the real equipment is safe.",modelDry:"Model: prescribed sinusoidal tray motion; ideal single-degree-of-freedom support estimate. Heat calculation is sensible heat only (Q = mcΔT); moisture evaporation, airflow, heat loss and material-specific process limits are excluded.",modelBld:"Model: linear single-degree-of-freedom building with sinusoidal base motion. It estimates steady-state response only; real buildings require modal analysis, soil–structure interaction, code checks and site-specific seismic input.",modelSpring:"Model: harmonically forced, damped single-degree-of-freedom oscillator in steady state. Real spring nonlinearity, travel stops, fatigue and multi-mode behaviour are excluded.",modelEngine:"Model: simplified Jeffcott-style rotor/support approximation with a single eccentric mass. It does not model flexible shafts, bearings, oil-film effects, gyroscopic effects, misalignment spectra or machine-specific ISO severity zones.",natural:"Natural frequency",ratio:"Frequency ratio",displacement:"Displacement amplitude",acceleration:"Peak acceleration",velocity:"RMS vibration velocity",forceResult:"Excitation force",transmissibility:"Displacement transmissibility",heat:"Sensible heat required",heatTime:"Ideal heating time",phase:"Phase lag",dampingPower:"Average damping power",rpmResult:"Rotational speed",imbalance:"Unbalance force",status:"Model status",nearLabel:"Near resonance",below:"Below resonance",above:"Above resonance",phaseLabel:"Phase angle",relative:"Relative displacement",absolute:"Absolute displacement",period:"Natural period",gamma:"Acceleration ratio Γ"},
+          ms:{platform:"PLATFORM SIMULASI KEJURUTERAAN",choose:"Pilih simulasi",intro:"Terokai sistem getaran dalam 3D. Ubah parameter operasi dan perhatikan tindak balas fizikal.",dryer:"Pengering bergetar industri",dryerSub:"Dulang bergetar · gerakan zarah",building:"Getaran bangunan",buildingSub:"Pengujaan tapak · redaman",spring:"Resonans spring–jisim",springSub:"Ayunan paksa · resonans",engine:"Enjin / mesin berputar",engineSub:"Ketakseimbangan rotor · getaran galas",view3d:"PAPARAN 3D LANGSUNG",resetView:"Tetap semula paparan",drag:"Seret untuk putar · skrol untuk zum",controls:"PANEL KAWALAN",foundation:"Asasi",industrial:"Industri",preset:"Pratetap parameter",update:"Kemas kini simulasi",defaults:"Pulihkan nilai asal",results:"KEPUTUSAN LANGSUNG",calculated:"Nilai kejuruteraan dikira",si:"UNIT SI",references:"Rujukan, andaian dan had",refIntro:"Formula ialah model pengajaran satu darjah kebebasan yang dipermudah. Julat parameter ialah julat demonstrasi yang boleh dilaras, bukan had reka bentuk mesin atau struktur yang diperakui.",disclaimer:"Untuk pembelajaran dan penerokaan awal sahaja. Bukan pengganti pengukuran tapak, data pengeluar tepat, jurutera bertauliah atau piawaian berkaitan. Warna amaran bukan zon penerimaan ISO.",normal:"Operasi biasa",low:"Julat rendah",high:"Julat tinggi",near:"Hampir resonans",running:"SIMULASI BERJALAN",paused:"SIMULASI DIJEDA",threeFail:"Enjin 3D gagal dimuatkan. Sambung ke internet dan muat semula halaman untuk memuatkan Three.js.",mass:"Jisim bergerak",stiffness:"Kekukuhan sokongan",damping:"Nisbah redaman",frequency:"Frekuensi pengujaan",amplitude:"Amplitud",force:"Daya pengujaan",rpm:"Kelajuan putaran",ecc:"Kesipian",trayMass:"Jisim dulang",materialMass:"Jisim bahan",specificHeat:"Muatan haba tentu",tempStart:"Suhu awal",tempEnd:"Suhu sasaran",heater:"Kuasa pemanas",efficiency:"Kecekapan haba",groundAmp:"Amplitud tanah",duration:"Tempoh gegaran",rotorMass:"Jisim rotor",support:"Kekukuhan sokongan/galas",run:"Kemas kini simulasi",range:"Julat",warningNear:"Frekuensi operasi hampir dengan frekuensi tabii anggaran. Resonans boleh meningkatkan getaran. Sahkan sistem sebenar dan elakkan operasi tidak selamat.",warningHigh:"Tindak balas yang dikira adalah tinggi bagi model ringkas ini. Semak kelegaan, kelesuan, sokongan, pengikat dan had pengeluar sebelum penggunaan sebenar.",warningOk:"Tiada amaran resonans daripada model ringkas ini. Ini tidak mengesahkan keselamatan peralatan sebenar.",modelDry:"Model: gerakan dulang sinus yang ditetapkan; anggaran sokongan satu darjah kebebasan yang ideal. Pengiraan haba ialah haba ketara sahaja (Q = mcΔT); penyejatan lembapan, aliran udara, kehilangan haba dan had proses bahan tidak diambil kira.",modelBld:"Model: bangunan linear satu darjah kebebasan dengan gerakan tapak sinus. Hanya tindak balas keadaan mantap dianggarkan; bangunan sebenar memerlukan analisis mod, interaksi tanah-struktur, semakan kod dan input seismik khusus tapak.",modelSpring:"Model: pengayun satu darjah kebebasan teredam yang dipaksa secara harmonik pada keadaan mantap. Ketaklinearan spring, hentian gerakan, kelesuan dan pelbagai mod tidak dimodelkan.",modelEngine:"Model: anggaran rotor/sokongan ringkas ala Jeffcott dengan satu jisim sipi. Aci fleksibel, kesan galas, filem minyak, giroskopik, spektrum salah jajaran dan zon keterukan ISO khusus mesin tidak dimodelkan.",natural:"Frekuensi tabii",ratio:"Nisbah frekuensi",displacement:"Amplitud sesaran",acceleration:"Pecutan puncak",velocity:"Halaju getaran RMS",forceResult:"Daya pengujaan",transmissibility:"Kebolehpindahan sesaran",heat:"Haba ketara diperlukan",heatTime:"Masa pemanasan ideal",phase:"Lengah fasa",dampingPower:"Kuasa redaman purata",rpmResult:"Kelajuan putaran",imbalance:"Daya ketakseimbangan",status:"Status model",nearLabel:"Hampir resonans",below:"Di bawah resonans",above:"Di atas resonans",phaseLabel:"Sudut fasa",relative:"Sesaran relatif",absolute:"Sesaran mutlak",period:"Tempoh tabii",gamma:"Nisbah pecutan Γ"}
+        };
+        const SIM_CONFIG = {
+          dryer:{title:"dryer",params:[
+            {id:"A",label:"amplitude",unit:"mm",min:.1,max:12,step:.1,foundation:[.5,5,0.1],industrial:[1,8,.1]},
+            {id:"f",label:"frequency",unit:"Hz",min:1,max:35,step:.1,foundation:[2,10,.1],industrial:[5,15,.1]},
+            {id:"mt",label:"trayMass",unit:"kg",min:5,max:1500,step:1,foundation:[20,150,1],industrial:[100,1200,1]},
+            {id:"m",label:"materialMass",unit:"kg",min:1,max:1000,step:1,foundation:[5,50,1],industrial:[50,800,1]},
+            {id:"k",label:"stiffness",unit:"kN/m",min:1,max:3000,step:1,foundation:[20,200,1],industrial:[100,2000,1]},
+            {id:"c",label:"specificHeat",unit:"J/kg·K",min:300,max:5000,step:10,foundation:[2300,2300,10],industrial:[2300,2300,10]},
+            {id:"Ti",label:"tempStart",unit:"°C",min:0,max:150,step:1,foundation:[25,25,1],industrial:[25,25,1]},
+            {id:"To",label:"tempEnd",unit:"°C",min:1,max:250,step:1,foundation:[80,80,1],industrial:[100,100,1]},
+            {id:"P",label:"heater",unit:"kW",min:.1,max:500,step:.1,foundation:[5,5,.1],industrial:[80,80,.1]},
+            {id:"eta",label:"efficiency",unit:"%",min:10,max:100,step:1,foundation:[60,60,1],industrial:[75,75,1]}]},
+          building:{title:"building",params:[
+            {id:"m",label:"mass",unit:"tonne",min:10,max:100000,step:10,foundation:[500,500,10],industrial:[10000,10000,10]},
+            {id:"k",label:"stiffness",unit:"MN/m",min:.1,max:10000,step:.1,foundation:[5,5,.1],industrial:[500,500,.1]},
+            {id:"z",label:"damping",unit:"%",min:.5,max:20,step:.1,foundation:[5,5,.1],industrial:[5,5,.1]},
+            {id:"Y",label:"groundAmp",unit:"mm",min:.1,max:500,step:.1,foundation:[30,30,.1],industrial:[80,80,.1]},
+            {id:"f",label:"frequency",unit:"Hz",min:.1,max:10,step:.01,foundation:[.1,.3,.01],industrial:[.2,2,.01]},
+            {id:"duration",label:"duration",unit:"s",min:1,max:600,step:1,foundation:[30,30,1],industrial:[60,60,1]}]},
+          spring:{title:"spring",params:[
+            {id:"m",label:"mass",unit:"kg",min:.1,max:5000,step:.1,foundation:[5,5,.1],industrial:[500,500,.1]},
+            {id:"k",label:"stiffness",unit:"N/m",min:1,max:5000000,step:1,foundation:[200,200,1],industrial:[500000,500000,1]},
+            {id:"z",label:"damping",unit:"%",min:.1,max:30,step:.1,foundation:[5,5,.1],industrial:[8,8,.1]},
+            {id:"f",label:"frequency",unit:"Hz",min:.05,max:50,step:.01,foundation:[.2,2.5,.01],industrial:[1,10,.01]},
+            {id:"F",label:"force",unit:"N",min:.1,max:100000,step:.1,foundation:[10,10,.1],industrial:[1000,1000,.1]}]},
+          engine:{title:"engine",params:[
+            {id:"rpm",label:"rpm",unit:"rpm",min:100,max:30000,step:10,foundation:[1500,1500,10],industrial:[3000,3000,10]},
+            {id:"mr",label:"rotorMass",unit:"kg",min:.1,max:10000,step:.1,foundation:[5,5,.1],industrial:[250,250,.1]},
+            {id:"e",label:"ecc",unit:"mm",min:.001,max:10,step:.001,foundation:[.1,.1,.001],industrial:[.05,.05,.001]},
+            {id:"m",label:"mass",unit:"kg",min:1,max:100000,step:1,foundation:[100,100,1],industrial:[2000,2000,1]},
+            {id:"k",label:"support",unit:"N/m",min:1000,max:100000000,step:1000,foundation:[1000000,1000000,1000],industrial:[20000000,20000000,1000]},
+            {id:"z",label:"damping",unit:"%",min:.5,max:30,step:.1,foundation:[5,5,.1],industrial:[8,8,.1]}]}
+        };
+        let simModule="dryer", simLevel="foundation", simValues={}, simRunning=true, threeScene=null, threeCamera=null, threeRenderer=null, threeRoot=null, threeClock=null, dragState=null, cameraTarget={x:0,y:0,z:0};
+        const simFmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString(undefined,{maximumFractionDigits:d,minimumFractionDigits:d}):"—";
+        const simClamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+        function apply3DText(){const t=SIM_TEXT[currentLang]||SIM_TEXT.en;document.querySelectorAll('[data-3d]').forEach(el=>{const k=el.dataset['3d'];if(t[k])el.textContent=t[k];});document.querySelector('#presetSelect option[value="normal"]').textContent=t.normal;document.querySelector('#presetSelect option[value="low"]').textContent=t.low;document.querySelector('#presetSelect option[value="high"]').textContent=t.high;document.querySelector('#presetSelect option[value="near"]').textContent=t.near;}
+        function applyApp(){apply3DText();renderParameterControls();recalculate();}
+        function showApp(which){selectModule(which==='d'?'dryer':which==='b'?'building':which);}
+        function selectModule(id){if(!SIM_CONFIG[id])return;simModule=id;document.querySelectorAll('.module-btn').forEach(b=>b.classList.toggle('active',b.dataset.module===id));const t=SIM_TEXT[currentLang]||SIM_TEXT.en;document.getElementById('moduleTitle').textContent=t[SIM_CONFIG[id].title];const cfg=SIM_CONFIG[id];simValues={};cfg.params.forEach(p=>{const a=p[simLevel];simValues[p.id]=a[1];});document.getElementById('presetSelect').value='normal';renderParameterControls();recalculate();buildScene();}
+        function setLevel(level){simLevel=level;document.getElementById('foundationBtn').classList.toggle('active',level==='foundation');document.getElementById('industrialBtn').classList.toggle('active',level==='industrial');selectModule(simModule);}
+        function renderParameterControls(){const cfg=SIM_CONFIG[simModule],t=SIM_TEXT[currentLang]||SIM_TEXT.en,box=document.getElementById('parameterControls');if(!box)return;box.innerHTML=cfg.params.map(p=>{const v=simValues[p.id]??p[simLevel][1];return `<div class="param-row"><div class="param-top"><label for="num-${p.id}">${t[p.label]||p.label}</label><div class="param-value"><input id="num-${p.id}" type="number" min="${p.min}" max="${p.max}" step="${p.step}" value="${v}" oninput="changeParameter('${p.id}',this.value,'number')"><span>${p.unit}</span></div></div><input id="range-${p.id}" type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${v}" oninput="changeParameter('${p.id}',this.value,'range')"><div class="range-ends"><span>${t.range}: ${simFmt(p.min,2)} ${p.unit}</span><span>${simFmt(p.max,2)} ${p.unit}</span></div></div>`;}).join('');}
+        function changeParameter(id,value,source){const cfg=SIM_CONFIG[simModule],p=cfg.params.find(x=>x.id===id);let v=Number(value);if(!Number.isFinite(v))return;v=simClamp(v,p.min,p.max);simValues[id]=v;const a=document.getElementById('num-'+id),b=document.getElementById('range-'+id);if(a&&source!=='number')a.value=v;if(b&&source!=='range')b.value=v;recalculate();}
+        function applyPreset(kind){const cfg=SIM_CONFIG[simModule];cfg.params.forEach(p=>{const limits=p[simLevel],min=p.min,max=p.max,base=limits[1];let v=kind==='low'?Math.max(min,limits[0]*.55):kind==='high'?Math.min(max,limits[1]*1.65):kind==='near'?base:base;if(kind==='near'){if(p.id==='f') {const vals=calculateValues(false);v=vals.fn??base;} else if(p.id==='rpm'&&simModule==='engine'){const vals=calculateValues(false);v=(vals.fn??(base/60))*60;} }simValues[p.id]=simClamp(v,min,max);});renderParameterControls();recalculate();}
+        function resetParameters(){document.getElementById('presetSelect').value='normal';const cfg=SIM_CONFIG[simModule];cfg.params.forEach(p=>simValues[p.id]=p[simLevel][1]);renderParameterControls();recalculate();}
+        function calculateValues(warn=true){const v=simValues,g=9.81;let fn=0,r=0,den=1,z=(v.z||5)/100,results=[],warning='',note='',severity='';const add=(label,value,unit)=>results.push({label,value,unit});
+          if(simModule==='dryer'){const A=v.A/1000,w=2*Math.PI*v.f,mass=v.mt+v.m,k=v.k*1000;fn=Math.sqrt(k/mass)/(2*Math.PI);r=v.f/fn;const amax=A*w*w,G=amax/g,Q=v.m*v.c*(v.To-v.Ti),time=Q/(v.P*1000*v.eta/100);add('Natural frequency',simFmt(fn)+' Hz','');add('Frequency ratio',simFmt(r),'f / fₙ');add('Peak acceleration',simFmt(amax)+' m/s²','');add('Acceleration ratio Γ',simFmt(G),'aₘₐₓ / g');add('Sensible heat required',simFmt(Q/1000,1)+' kJ','');add('Ideal heating time',simFmt(time/60,1)+' min','');warning=r>.8&&r<1.25?'near':G>6?'high':'ok';note='modelDry';}
+          if(simModule==='building'){const m=v.m*1000,k=v.k*1e6,wn=Math.sqrt(k/m),w=2*Math.PI*v.f;fn=wn/(2*Math.PI);r=v.f/fn;den=Math.sqrt((1-r*r)**2+(2*z*r)**2);const Y=v.Y/1000,rel=Y*r*r/den,abs=Y*Math.sqrt(1+(2*z*r)**2)/den,phi=Math.atan2(2*z*r,1-r*r),c=2*z*m*wn,P=.5*c*w*w*rel*rel;add('Natural frequency',simFmt(fn)+' Hz','');add('Frequency ratio',simFmt(r),'f / fₙ');add('Relative displacement',simFmt(rel*1000,2)+' mm','');add('Absolute displacement',simFmt(abs*1000,2)+' mm','');add('Phase lag',simFmt(phi*180/Math.PI,1)+'°','');add('Average damping power',simFmt(P/1000,3)+' kW','');warning=r>.8&&r<1.25?'near':abs>.1?'high':'ok';note='modelBld';}
+          if(simModule==='spring'){const m=v.m,k=v.k,wn=Math.sqrt(k/m),w=2*Math.PI*v.f;fn=wn/(2*Math.PI);r=v.f/fn;den=Math.sqrt((1-r*r)**2+(2*z*r)**2);const X=(v.F/k)/den,phi=Math.atan2(2*z*r,1-r*r),vmax=w*X,amax=w*w*X,c=2*z*m*wn,P=.5*c*vmax*vmax;add('Natural frequency',simFmt(fn)+' Hz','');add('Natural period',simFmt(1/fn)+' s','');add('Frequency ratio',simFmt(r),'f / fₙ');add('Displacement amplitude',simFmt(X*1000,3)+' mm','');add('Peak velocity',simFmt(vmax,3)+' m/s','');add('Peak acceleration',simFmt(amax,3)+' m/s²','');add('Phase lag',simFmt(phi*180/Math.PI,1)+'°','');add('Average damping power',simFmt(P,3)+' W','');warning=r>.8&&r<1.25?'near':X>.1?'high':'ok';note='modelSpring';}
+          if(simModule==='engine'){const w=v.rpm*2*Math.PI/60,m=v.m,wn=Math.sqrt(v.k/m);fn=wn/(2*Math.PI);const f=v.rpm/60;r=f/fn;den=Math.sqrt((1-r*r)**2+(2*z*r)**2);const F=v.mr*(v.e/1000)*w*w,X=(F/v.k)/den,velRms=w*X/Math.sqrt(2),accRms=w*w*X/Math.sqrt(2),phi=Math.atan2(2*z*r,1-r*r);add('Rotational speed',simFmt(v.rpm,0)+' rpm','');add('Natural frequency',simFmt(fn)+' Hz','');add('Frequency ratio',simFmt(r),'1× running / fₙ');add('Unbalance force',simFmt(F,2)+' N','');add('Displacement amplitude',simFmt(X*1000,3)+' mm','');add('RMS vibration velocity',simFmt(velRms*1000,2)+' mm/s','');add('RMS vibration acceleration',simFmt(accRms,2)+' m/s²','');add('Phase lag',simFmt(phi*180/Math.PI,1)+'°','');warning=r>.8&&r<1.25?'near':X>.005?'high':'ok';note='modelEngine';}
+          if(warn){const t=SIM_TEXT[currentLang]||SIM_TEXT.en;const msg=warning==='near'?t.warningNear:warning==='high'?t.warningHigh:t.warningOk;document.getElementById('simulationWarnings').className='simulation-warning'+(warning==='near'?' warn':warning==='high'?' danger':'');document.getElementById('simulationWarnings').textContent=msg;document.getElementById('modelNote').textContent=t[note];}
+          return {fn,r,results,warning};}
+        function recalculate(){if(!document.getElementById('simulationResults'))return;const data=calculateValues(true);document.getElementById('simulationResults').innerHTML=data.results.map(x=>`<div class="metric"><span>${x.label}</span><b>${x.value}</b><small>${x.unit}</small></div>`).join('');updateSceneScale();}
+        function toggleSimulation(){simRunning=!simRunning;const t=SIM_TEXT[currentLang]||SIM_TEXT.en;document.getElementById('runBtn').textContent=simRunning?(currentLang==='ms'?'Jeda':'Pause'):(currentLang==='ms'?'Mula':'Resume');document.getElementById('simStatus').textContent=simRunning?t.running:t.paused;}
+        function initThree(){
+            const host=document.getElementById('threeStage');
+            const fallback=document.getElementById('threeFallback');
+            if(!host)return;
+            // Do not create a WebGL renderer while its parent tab is display:none (width is 0).
+            if(host.clientWidth<10 || host.clientHeight<10)return;
+            if(!window.THREE){fallback.hidden=false;fallback.textContent='3D library did not load. Check your internet connection, then reload the application.';return;}
+            if(threeRenderer){resizeThree();return;}
+            try{
+                threeScene=new THREE.Scene();
+                threeScene.background=new THREE.Color(0x14243a);
+                threeCamera=new THREE.PerspectiveCamera(42,host.clientWidth/host.clientHeight,.1,1000);
+                threeCamera.position.set(7,5.5,9);
+                threeCamera.lookAt(0,0.2,0);
+                threeRenderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+                threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+                threeRenderer.setSize(host.clientWidth,host.clientHeight);
+                threeRenderer.shadowMap.enabled=true;
+                threeRenderer.shadowMap.type=THREE.PCFSoftShadowMap;
+                host.appendChild(threeRenderer.domElement);
+                threeScene.add(new THREE.HemisphereLight(0xc9e6ff,0x263348,2));
+                const key=new THREE.DirectionalLight(0xffffff,2.4);key.position.set(5,9,7);key.castShadow=true;threeScene.add(key);
+                const fill=new THREE.DirectionalLight(0x5ba8ff,1.1);fill.position.set(-6,3,-5);threeScene.add(fill);
+                threeRoot=new THREE.Group();threeScene.add(threeRoot);threeClock=new THREE.Clock();
+                host.addEventListener('pointerdown',e=>{dragState={x:e.clientX,y:e.clientY,rotY:threeRoot.rotation.y,rotX:threeRoot.rotation.x};if(host.setPointerCapture)host.setPointerCapture(e.pointerId);});
+                host.addEventListener('pointermove',e=>{if(!dragState)return;threeRoot.rotation.y=dragState.rotY+(e.clientX-dragState.x)*.008;threeRoot.rotation.x=simClamp(dragState.rotX+(e.clientY-dragState.y)*.006,-.6,.6);});
+                host.addEventListener('pointerup',()=>dragState=null);host.addEventListener('pointercancel',()=>dragState=null);
+                host.addEventListener('wheel',e=>{const target=new THREE.Vector3(0,.2,0);const offset=threeCamera.position.clone().sub(target).multiplyScalar(e.deltaY>0?1.08:.92);offset.clampLength(4,22);threeCamera.position.copy(target.add(offset));threeCamera.lookAt(0,.2,0);},{passive:true});
+                window.addEventListener('resize',resizeThree);
+                if(window.ResizeObserver){new ResizeObserver(resizeThree).observe(host);}
+                fallback.hidden=true;buildScene();animateThree();resizeThree();
+            }catch(e){
+                console.error('3D initialisation failed:',e);
+                fallback.hidden=false;
+                fallback.textContent='3D viewer could not start. Your browser may not support WebGL, or hardware acceleration may be disabled.';
+                if(threeRenderer){threeRenderer.dispose();threeRenderer=null;}
+            }
+        }
+        function resizeThree(){const host=document.getElementById('threeStage');if(!threeRenderer||!host||host.clientWidth<10||host.clientHeight<10)return;threeCamera.aspect=host.clientWidth/host.clientHeight;threeCamera.updateProjectionMatrix();threeRenderer.setSize(host.clientWidth,host.clientHeight);}
+        function resetCamera(){if(!threeCamera||!threeRoot)return;threeCamera.position.set(7,5.5,9);threeCamera.lookAt(0,.2,0);threeRoot.rotation.set(0,0,0);}
+        function mat(color,metal=0,rough=.55){return new THREE.MeshStandardMaterial({color,metalness:metal,roughness:rough});}
+        function box(parent,x,y,z,sx,sy,sz,material){const o=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;}
+        function cylinder(parent,x,y,z,r1,r2,h,material,segments=24){const o=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,segments),material);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o;}
+        function springMesh(parent,x1,y1,z1,x2,y2,z2,r=.09,turns=9,color=0xf59e0b){const points=[],dx=x2-x1,dy=y2-y1,dz=z2-z1,len=Math.hypot(dx,dy,dz),n=turns*12;for(let i=0;i<=n;i++){const t=i/n,a=t*turns*Math.PI*2;points.push(new THREE.Vector3(x1+dx*t+r*Math.cos(a),y1+dy*t,z1+dz*t+r*Math.sin(a)));}const curve=new THREE.CatmullRomCurve3(points);const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.max(100,n),.025,8,false),mat(color,.65,.3));parent.add(mesh);return mesh;}
+        let movingParts={};
+        function clearScene(){if(!threeRoot)return;while(threeRoot.children.length){const o=threeRoot.children.pop();o.traverse?.(x=>{x.geometry?.dispose?.();if(x.material){if(Array.isArray(x.material))x.material.forEach(m=>m.dispose());else x.material.dispose();}});}}
+        function buildScene(){if(!threeRoot)return;clearScene();movingParts={};const steel=mat(0x91a7bd,.72,.28),dark=mat(0x27384b,.55,.35),blue=mat(0x2186d9,.35,.28),orange=mat(0xf59e0b,.35,.3),floor=mat(0x34465c,.15,.8),glass= new THREE.MeshStandardMaterial({color:0x56b4e9,transparent:true,opacity:.22,metalness:.1,roughness:.2});const ground=box(threeRoot,0,-1.15,0,12,.18,9,floor);const grid=new THREE.GridHelper(12,24,0x7892ae,0x40536b);grid.position.y=-1.04;threeRoot.add(grid);
+          if(simModule==='dryer'){box(threeRoot,0,-.65,0,4,.22,2.2,dark);[-1.35,1.35].forEach(x=>{box(threeRoot,x,-.95,-.65,.18,.4,.18,steel);box(threeRoot,x,-.95,.65,.18,.4,.18,steel);});movingParts.tray=box(threeRoot,0,.15,0,4,.22,2,blue);[-1.3,1.3].forEach(x=>[-.65,.65].forEach(z=>springMesh(threeRoot,x,-.8,z,x,.02,z,.07,7)));for(let i=0;i<42;i++){const p=new THREE.Mesh(new THREE.SphereGeometry(.07,12,10),mat(i%2?0xe7b85b:0xd6e4ef,.1,.65));p.position.set((Math.random()-.5)*3.5,.36+(Math.random()*.12), (Math.random()-.5)*1.5);threeRoot.add(p);movingParts['p'+i]=p;}box(threeRoot,0,.65,-1.25,3,.12,.15,orange);}
+          if(simModule==='building'){box(threeRoot,0,-.7,0,5,.22,3,dark);movingParts.base=box(threeRoot,0,-.48,0,5,.18,3,orange);for(let i=0;i<4;i++){const x=i%2?1.7:-1.7,z=i<2?-.8:.8;box(threeRoot,x,.15,z,.22,1.1,.22,steel);}movingParts.building=box(threeRoot,0,.85,0,4,2.2,2.3,blue);for(let j=0;j<3;j++)box(threeRoot,0,.05+j*.65,1.17,4.05,.07,.06,steel);box(threeRoot,0,2.1,0,4.2,.16,2.5,orange);}
+          if(simModule==='spring'){box(threeRoot,0,.95,0,3.8,.18,2.4,dark);movingParts.mass=box(threeRoot,0,-.35,0,1.65,.75,1.4,blue);springMesh(threeRoot,-.55,.85,0,-.55,.03,0,.09,10);springMesh(threeRoot,.55,.85,0,.55,.03,0,.09,10);box(threeRoot,0,-1.05,0,4,.16,2.6,steel);}
+          if(simModule==='engine'){box(threeRoot,0,-.75,0,4,.22,2.5,dark);box(threeRoot,-1.25,-.2,0,.35,1,.8,steel);box(threeRoot,1.25,-.2,0,.35,1,.8,steel);movingParts.shaft=cylinder(threeRoot,0,-.05,0,.13,.13,3,steel,32);movingParts.rotor=cylinder(threeRoot,0,-.05,0,.72,.72,.45,blue,48);movingParts.unbalance=box(threeRoot,.65,-.05,0,.22,.22,.22,orange);movingParts.bearing1=cylinder(threeRoot,-1.25,-.2,0,.36,.36,.25,orange,32);movingParts.bearing2=cylinder(threeRoot,1.25,-.2,0,.36,.36,.25,orange,32);}
+          threeRoot.rotation.set(0,0,0);}
+        function updateSceneScale(){if(!threeRoot||!movingParts)return;}
+        let simElapsed=0;
+        function animateThree(){if(!threeRenderer)return;requestAnimationFrame(animateThree);const dt=Math.min(threeClock.getDelta(),.05);if(simRunning)simElapsed+=dt;const t=simElapsed,v=simValues,w=2*Math.PI*(simModule==='engine'?v.rpm/60:v.f||1);if(simModule==='dryer'&&movingParts.tray){const a=v.A/1000*4;movingParts.tray.position.y=.15+Math.sin(w*t)*a;Object.keys(movingParts).filter(k=>k.startsWith('p')).forEach((k,i)=>{const p=movingParts[k];p.position.y=.36+Math.sin(w*t+i*.3)*a+Math.max(0,Math.sin(w*t+i*.8))*Math.min(.4,(v.A/12)*.4);});}
+          if(simModule==='building'&&movingParts.building){const data=calculateValues(false),y=v.Y/1000*3*Math.sin(w*t);movingParts.base.position.x=y*.4;movingParts.building.position.x=y*.4+Math.sin(w*t-(data.r||0))*Math.min(1.2,(v.Y/1000)*data.r*4);}
+          if(simModule==='spring'&&movingParts.mass){const data=calculateValues(false),X=Math.min(.8,(data.results.find(x=>x.label==='Displacement amplitude')?parseFloat(data.results.find(x=>x.label==='Displacement amplitude').value):0)/1000);movingParts.mass.position.y=-.35+Math.sin(w*t)*X*2.2;}
+          if(simModule==='engine'&&movingParts.rotor){movingParts.rotor.rotation.y=t*w;movingParts.shaft.rotation.y=t*w;movingParts.unbalance.rotation.y=t*w;const data=calculateValues(false),vib=Math.min(.12,(data.results.find(x=>x.label==='Displacement amplitude')?parseFloat(data.results.find(x=>x.label==='Displacement amplitude').value):0)/1000);movingParts.rotor.position.x=Math.sin(w*t)*vib*2;movingParts.shaft.position.x=movingParts.rotor.position.x;}
+          threeRenderer.render(threeScene,threeCamera);}
+        function initParticles(){/* legacy compatibility */}
+        let appLast=performance.now();
+        function appLoop(now){appLast=now;requestAnimationFrame(appLoop);}
+
         document.querySelectorAll("#tabbar .tab").forEach(tab => {
             tab.addEventListener("click", () => showPanel(tab.dataset.panel));
         });
@@ -1390,7 +1642,12 @@ const MATS = [
                 selPt = best;
             });
             if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+            initParticles();
             requestAnimationFrame(loop);
+            initThree();
+            selectModule("dryer");
+            applyApp();
+            requestAnimationFrame(appLoop);
         });
     </script>
 </body>
